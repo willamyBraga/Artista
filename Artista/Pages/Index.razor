@@ -1,0 +1,75 @@
+﻿@page "/"
+@using Artista.Data.Model
+@inject NavigationManager navegacao
+@inject ArtistaControler artistaControler
+
+<div>
+    <h4>Cadastro de artista</h4>
+</div>
+
+@if (artistas == null)
+{
+<h1>Carregando...</h1>
+}
+else if (artistas.Count == 0)
+{
+<h1>Não existem cadastros...</h1>
+}
+else
+{
+<div class="form-group">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Musica</th>
+                <th>Deletar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in artistas)
+                {
+            <tr>
+                <td>@item.ArtistaNome</td>
+                <td>@item.MusicaArtista</td>
+                <td><a @onclick="@(()=> Deletar(@item.ArtistaId))" class="btn btn-danger oi oi-trash"></a></td>
+            </tr>
+                }
+        </tbody>
+    </table>
+</div>
+}
+
+<Confirmar @ref="@confirma" onCancela="@Cancelar" onConfirma="@DeletarConfirma">
+    <div>Deseja escluir o item ?</div>
+</Confirmar>
+
+<button class="btn btn-primary" @onclick="@(()=> navegacao.NavigateTo("/cadastroartista"))">Incluir novo Registro</button>
+
+
+@code{
+    List<ArtistaModel> artistas = new List<ArtistaModel>();
+    Confirmar confirma;
+    int idDeleta;
+
+    protected override async Task OnInitializedAsync()
+    {
+        artistas = await artistaControler.LerDados();
+    }
+    //deletar
+    void Deletar(int artistaid)
+    {
+        confirma.Exibir();
+        idDeleta = artistaid;
+    }
+    async Task DeletarConfirma()
+    {
+        await artistaControler.Excluir(idDeleta);
+        confirma.Ocultar();
+        artistas = await artistaControler.LerDados();
+    }
+    void Cancelar()
+    {
+        confirma.Ocultar();
+    }
+}

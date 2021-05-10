@@ -1,0 +1,62 @@
+﻿@page "/cadastroartista"
+@inject NavigationManager navegacao
+@inject ArtistaControler artista
+
+
+<div class="card">
+    <div class="card-header"><h3>Cadastro de Artista</h3></div>
+    <EditForm Model="@artistas" OnValidSubmit="@AddArtista">
+        <DataAnnotationsValidator />
+        <ul class="list-group">
+            <li class="list-group-item mb-3">
+                <label>Nome :</label>
+                <InputText class="form-control" @bind-Value="@artistas.ArtistaNome" />
+                <ValidationMessage For="() => artistas.ArtistaNome" />
+            </li>
+            <li class="list-group-item mb-3">
+                <label>Musica:</label>
+                <InputText class="form-control" @bind-Value="@artistas.MusicaArtista" />
+                <ValidationMessage For="() => artistas.MusicaArtista" />
+            </li>
+        </ul>
+        <li class="list-group-item mb-3">
+            <div class="btn-toolbar" role="toolbar">
+                <div class="btn-group-sm float-lg-right">
+                    <button type="submit" class="btn me-s2 btn-success">Salvar</button> 
+                    <button type="button" class="btn me-s2 btn-danger" @onclick="@Cancelar">Cancelar</button>
+                </div>
+            </div>
+        </li>
+    </EditForm>
+</div>
+
+<h1>@erro</h1>
+
+@code {
+    private List<ArtistaModel> cadartista;
+    private ArtistaModel artistas = new ArtistaModel();
+    private string erro;
+
+    async Task AddArtista(EditContext validacao)
+    {
+        try
+        {
+            if (validacao.Validate())
+            {
+                await artista.Adicionar(artistas);
+                navegacao.NavigateTo("/");
+            }
+        }
+        catch (Exception ex)
+        {
+
+            erro = "Erro ao salvar " + ex.Message;
+        }
+    }
+
+    public void Cancelar()
+    {
+        navegacao.NavigateTo("/");
+
+    }
+}
