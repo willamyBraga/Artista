@@ -1,0 +1,69 @@
+﻿@page "/editar/{artistaid:int}"
+@inject NavigationManager navegacao
+@inject ArtistaControler ArtistaControler
+
+<div class="card">
+    <div class="card-header"><h3>Editar Artista</h3></div>
+    <EditForm Model="@artista" OnValidSubmit="@EditArtista">
+        <DataAnnotationsValidator />
+        <ul class="list-group">
+            <li class="list-group-item mb-3">
+                <label>Nome :</label>
+                <InputText class="form-control" @bind-Value="@artista.ArtistaNome" />
+                <ValidationMessage For="() => artista.ArtistaNome" />
+            </li>
+            <li class="list-group-item mb-3">
+                <label>Musica:</label>
+                <InputText class="form-control" @bind-Value="@artista.MusicaArtista" />
+                <ValidationMessage For="() => artista.MusicaArtista" />
+            </li>
+        </ul>
+        <li class="list-group-item mb-3">
+            <div class="btn-toolbar" role="toolbar">
+                <div class="btn-group-sm float-lg-right">
+                    <button type="submit" class="btn me-s2 btn-success">Salvar</button>
+                    <button type="button" class="btn me-s2 btn-danger" @onclick="@Cancelar">Cancelar</button>
+                </div>
+            </div>
+        </li>
+    </EditForm>
+</div>
+
+<div>
+    <h1>@erro</h1>
+</div>
+
+@code {
+    [Parameter]
+    public int artistaid { get; set; }
+
+    private ArtistaModel artista = new ArtistaModel();
+    private string erro;
+
+    protected override async Task OnInitializedAsync()
+    {
+        artista = await ArtistaControler.BuscarArtista(artistaid);
+    }
+
+    async Task EditArtista(EditContext validacao)
+    {
+        try
+        {
+            if (validacao.Validate())
+            {
+                await ArtistaControler.Editar(artista, artistaid);
+                navegacao.NavigateTo("/");
+            }
+        }
+        catch (Exception ex)
+        {
+
+            erro = "Erro ao editar " + ex.Message;
+        }
+    }
+    void Cancelar()
+    {
+        navegacao.NavigateTo("/");
+    }
+
+}

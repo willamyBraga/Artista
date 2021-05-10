@@ -23,6 +23,7 @@ else
             <tr>
                 <th>Nome</th>
                 <th>Musica</th>
+                <th>Editar</th>
                 <th>Deletar</th>
             </tr>
         </thead>
@@ -32,6 +33,7 @@ else
             <tr>
                 <td>@item.ArtistaNome</td>
                 <td>@item.MusicaArtista</td>
+                <td><a class="btn btn-primary oi oi-pencil" @onclick="@(()=> navegacao.NavigateTo("/editar/" + @item.ArtistaId))"></a></td>
                 <td><a @onclick="@(()=> Deletar(@item.ArtistaId))" class="btn btn-danger oi oi-trash"></a></td>
             </tr>
                 }
