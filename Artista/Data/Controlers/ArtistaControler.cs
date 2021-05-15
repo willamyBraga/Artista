@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Artista.Data.Model;
 using Npgsql;
+
 
 namespace Artista.Data.Controlers
 {
@@ -13,14 +15,41 @@ namespace Artista.Data.Controlers
 
         public ArtistaControler(StringConexao conexao)
         {
-            _conexao = conexao; 
+            _conexao = conexao;
         }
+
+
+        //ler dados com datatable
+        public async Task<DataTable> LerDadosDataTable()
+        {
+            DataTable dt = new DataTable();
+            NpgsqlConnection conn = new NpgsqlConnection(_conexao.conexao);
+            NpgsqlDataAdapter da = new NpgsqlDataAdapter("SELECT *FROM tbl_artista ", conn);
+            da.Fill(dt);
+           
+            return await Task.FromResult(dt);                     
+        }
+
+        //adicionar dados com datatable
+        public async Task<DataTable> AdicionarDataTable(DataTable dt)
+        {
+            NpgsqlConnection conn = new NpgsqlConnection(_conexao.conexao);
+            conn.Open(); 
+            NpgsqlDataAdapter da = new NpgsqlDataAdapter("SELECT *FROM tbl_artista ORDER BY NomeArtista", conn);
+            //criar os comandos  automatico 
+            NpgsqlCommandBuilder cmbuilder = new NpgsqlCommandBuilder(da);
+            da.Fill(dt);
+            da.Update(dt);
+            conn.Close(); 
+            return await Task.FromResult(dt);
+        }
+
         //mostrar/ler dados
         public async Task<List<ArtistaModel>> LerDados()
         {
             List<ArtistaModel> artistas = new List<ArtistaModel>();
 
-            using(NpgsqlConnection conn = new NpgsqlConnection(_conexao.conexao))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_conexao.conexao))
             {
                 string sql = "SELECT *FROM tbl_artista ORDER BY NomeArtista";
                 NpgsqlCommand comando = new NpgsqlCommand(sql, conn);
@@ -43,12 +72,12 @@ namespace Artista.Data.Controlers
                 conn.Dispose();
             }
 
-            return artistas; 
+            return artistas;
         }
         //adicionar novos registros
         public async Task Adicionar(ArtistaModel artista)
         {
-            using(NpgsqlConnection conn = new NpgsqlConnection(_conexao.conexao))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_conexao.conexao))
             {
                 string sql = "INSERT INTO tbl_artista(NomeArtista, MusicaArtista) VALUES (@nome, @musica)";
                 NpgsqlCommand comando = new NpgsqlCommand(sql, conn);
@@ -56,7 +85,7 @@ namespace Artista.Data.Controlers
                 comando.Parameters.AddWithValue("@musica", artista.MusicaArtista);
                 conn.Open();
                 await comando.ExecuteNonQueryAsync();
-                conn.Dispose(); 
+                conn.Dispose();
             }
         }
 
@@ -64,7 +93,7 @@ namespace Artista.Data.Controlers
         public async Task<ArtistaModel> BuscarArtista(int artistaid)
         {
             ArtistaModel registro = new ArtistaModel();
-            using(NpgsqlConnection conn = new NpgsqlConnection(_conexao.conexao))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_conexao.conexao))
             {
                 string sql = "SELECT *FROM tbl_artista WHERE artistaId =" + artistaid;
                 NpgsqlCommand comando = new NpgsqlCommand(sql, conn);
@@ -80,12 +109,12 @@ namespace Artista.Data.Controlers
                 conn.Close();
                 conn.Dispose();
             }
-            return registro; 
+            return registro;
         }
         //editar 
         public async Task Editar(ArtistaModel artista, int artistaid)
         {
-            using(NpgsqlConnection conn = new NpgsqlConnection(_conexao.conexao))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_conexao.conexao))
             {
                 string sql = "UPDATE tbl_artista SET NomeArtista=@nome, MusicaArtista=@musica WHERE artistaId=@id";
                 NpgsqlCommand comando = new NpgsqlCommand(sql, conn);
@@ -96,13 +125,13 @@ namespace Artista.Data.Controlers
                 conn.Open();
                 await comando.ExecuteNonQueryAsync();
                 conn.Close();
-                conn.Dispose(); 
+                conn.Dispose();
             }
         }
         //excluir dados
-        public async Task Excluir(int artistaid)
+        public async Task Excluir(object artistaid)
         {
-            using(NpgsqlConnection conn = new NpgsqlConnection(_conexao.conexao))
+            using (NpgsqlConnection conn = new NpgsqlConnection(_conexao.conexao))
             {
                 string sql = "DELETE FROM tbl_artista WHERE artistaId= " + artistaid;
 
@@ -110,9 +139,9 @@ namespace Artista.Data.Controlers
                 conn.Open();
                 await comando.ExecuteNonQueryAsync();
                 conn.Close();
-                conn.Dispose(); 
-            }            
+                conn.Dispose();
+            }
         }
-           
+
     }
 }

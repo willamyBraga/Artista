@@ -2,45 +2,52 @@
 @using Artista.Data.Model
 @inject NavigationManager navegacao
 @inject ArtistaControler artistaControler
+@using System.Data;
+
 
 <div>
     <h4>Cadastro de artista</h4>
+    <button class="btn btn-primary" @onclick="@(()=> navegacao.NavigateTo("/cadastroartista"))">Incluir novo Registro</button>
 </div>
 
-@if (artistas == null)
+@*@if (artistas == null)
 {
-<h1>Carregando...</h1>
+    <h1>Carregando...</h1>
 }
 else if (artistas.Count == 0)
 {
-<h1>Não existem cadastros...</h1>
-}
-else
-{
-<div class="form-group">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Musica</th>
-                <th>Editar</th>
-                <th>Deletar</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in artistas)
+    <h1>Não existem cadastros...</h1>
+}*@
+    <div class="form-group">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Musica</th>
+                    <th>Editar</th>
+                    <th>Deletar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @* Ver quantos itens esta vindo (Se é que esta vindo rsrs) *@ 
+                @*@dt.Rows.Count.ToString()*@
+
+
+                @foreach (DataRow a in dt.Rows)
                 {
-            <tr>
-                <td>@item.ArtistaNome</td>
-                <td>@item.MusicaArtista</td>
-                <td><a class="btn btn-primary oi oi-pencil" @onclick="@(()=> navegacao.NavigateTo("/editar/" + @item.ArtistaId))"></a></td>
-                <td><a @onclick="@(()=> Deletar(@item.ArtistaId))" class="btn btn-danger oi oi-trash"></a></td>
-            </tr>
+                <tr>
+                    <td>@a["NomeArtista"]</td>
+                    <td>@a["MusicaArtista"]</td>
+                    <td><a class="btn btn-primary oi oi-pencil" @onclick="@(()=> navegacao.NavigateTo("/editar/" + a["artistaId"]))"></a></td>
+                    <td><a @onclick="@(()=> Deletar(@a["artistaId"]))"  class="btn btn-danger oi oi-trash"></a></td> 
+                    @*<td><a @onclick="@(() => a.Delete["artistaId"] )"  class="btn btn-danger oi oi-trash"></a></td>*@ 
+
+                </tr>
                 }
-        </tbody>
-    </table>
-</div>
-}
+       
+            </tbody>
+        </table>
+    </div>
 
 <Confirmar @ref="@confirma" onCancela="@Cancelar" onConfirma="@DeletarConfirma">
     <div>Deseja escluir o item ?</div>
@@ -51,15 +58,17 @@ else
 
 @code{
     List<ArtistaModel> artistas = new List<ArtistaModel>();
+    DataTable dt = new DataTable();
     Confirmar confirma;
-    int idDeleta;
+    object idDeleta;
 
     protected override async Task OnInitializedAsync()
     {
-        artistas = await artistaControler.LerDados();
+        dt = await artistaControler.LerDadosDataTable();
+      //artistas = await artistaControler.LerDadosDataTable();
     }
     //deletar
-    void Deletar(int artistaid)
+    void Deletar(object artistaid)
     {
         confirma.Exibir();
         idDeleta = artistaid;

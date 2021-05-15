@@ -1,56 +1,67 @@
 ﻿@page "/cadastroartista"
 @inject NavigationManager navegacao
 @inject ArtistaControler artista
-
+@using System.Data
 
 <div class="card">
     <div class="card-header"><h3>Cadastro de Artista</h3></div>
-    <EditForm Model="@artistas" OnValidSubmit="@AddArtista">
-        <DataAnnotationsValidator />
+    <EditForm Model="@dt" OnValidSubmit="@AddArtista">
         <ul class="list-group">
             <li class="list-group-item mb-3">
-                <label>Nome :</label>
-                <InputText class="form-control" @bind-Value="@artistas.ArtistaNome" />
-                <ValidationMessage For="() => artistas.ArtistaNome" />
+                <label>Nome</label>
+                <InputText  class="form-control"  @bind-Value="@NomeArtista" placeholder="Informe o nome do artista  " required />
             </li>
             <li class="list-group-item mb-3">
-                <label>Musica:</label>
-                <InputText class="form-control" @bind-Value="@artistas.MusicaArtista" />
-                <ValidationMessage For="() => artistas.MusicaArtista" />
+                <label>Musica</label>
+                <InputText class="form-control"  @bind-Value="@MusicaArtista" placeholder="Informe a Musica do artista " required />
+            </li>
+            <li class="list-group-item mb-3">
+                <div class="btn-toolbar" role="toolbar">
+                    <div class="btn-group-sm float-lg-right">
+                        <button type="submit" class="btn btn-primary">Cadastrar</button>
+                        <button type="button" class="btn me-s2 btn-danger" @onclick="@Cancelar">Cancelar</button>
+                    </div>
+                </div>
             </li>
         </ul>
-        <li class="list-group-item mb-3">
-            <div class="btn-toolbar" role="toolbar">
-                <div class="btn-group-sm float-lg-right">
-                    <button type="submit" class="btn me-s2 btn-success">Salvar</button> 
-                    <button type="button" class="btn me-s2 btn-danger" @onclick="@Cancelar">Cancelar</button>
-                </div>
-            </div>
-        </li>
     </EditForm>
 </div>
 
+<h1 class="alert-success form-control">@sucesso</h1>
 <h1>@erro</h1>
 
 @code {
-    private List<ArtistaModel> cadartista;
-    private ArtistaModel artistas = new ArtistaModel();
-    private string erro;
+    private DataTable dt = new DataTable();
+    private DataRow row;
 
-    async Task AddArtista(EditContext validacao)
+    private string erro;
+    private string sucesso;
+
+    //strings usadas para receber os valores do formulario
+    string NomeArtista = "";
+    string MusicaArtista = "";
+
+    async Task AddArtista()
     {
         try
         {
-            if (validacao.Validate())
-            {
-                await artista.Adicionar(artistas);
-                navegacao.NavigateTo("/");
-            }
+            //datatable recebe os dados do banco de dados
+            dt = await artista.LerDadosDataTable();
+            row = dt.NewRow();
+            //datarow recebe as strings com os dados
+            row["NomeArtista"] = NomeArtista;
+            row["MusicaArtista"] = MusicaArtista;
+            //datatable dt adiciona os dados
+            dt.Rows.Add(row);
+            //manda pra função executar o update
+            await artista.AdicionarDataTable(dt);
+            sucesso = "Item salvo com sucesso ";
+            navegacao.NavigateTo("/");
         }
         catch (Exception ex)
         {
 
-            erro = "Erro ao salvar " + ex.Message;
+            erro = "Não foi possivel cadastrar " + ex.Message;
         }
     }
 
@@ -59,4 +70,6 @@
         navegacao.NavigateTo("/");
 
     }
+
+
 }

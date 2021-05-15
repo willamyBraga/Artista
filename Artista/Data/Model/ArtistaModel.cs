@@ -12,6 +12,6 @@ namespace Artista.Data.Model
         [Required(ErrorMessage = "O campo {0} é obrigatorio")]
         public string ArtistaNome { get; set; }
         [Required(ErrorMessage = "O campo {0} é obrigatorio")]
-        public string MusicaArtista { get; set; }
+        public string MusicaArtista { get; set; } 
     }
 }
