@@ -5,55 +5,60 @@
 @using System.Data;
 
 
-<div>
+<div style="padding: 10px 10px 10px;">
     <h4>Cadastro de artista</h4>
     <button class="btn btn-primary" @onclick="@(()=> navegacao.NavigateTo("/cadastroartista"))">Incluir novo Registro</button>
+    <div>@erro</div>
+    <input type="text" @bind="Filter" @onkeyup="Pesquisar" @onkeydown="Limpar" />
+    <button @onclick="Pesquisar" class="btn btn-outline-info">Filtrar</button>
+    @*<button @onclick="Limpar" class="btn btn-danger">Limpar</button>*@
 </div>
 
-@*@if (artistas == null)
+@* a função onkeyup e onkeydown habilita as teclas enter e delete  *@
+
+@if (dt == null)
 {
     <h1>Carregando...</h1>
 }
-else if (artistas.Count == 0)
+else if (dt.Rows.Count == 0)
 {
     <h1>Não existem cadastros...</h1>
-}*@
+}
+else
+{
     <div class="form-group">
         <table class="table">
             <thead>
                 <tr>
-                    <th>Nome</th>
-                    <th>Musica</th>
+                    <th><a @onclick="() => Ordenar(1)" style="cursor: pointer">Nome</a></th>
+                    <th><a @onclick="() => Ordenar(2)" style="cursor: pointer">Musica</a></th>
                     <th>Editar</th>
                     <th>Deletar</th>
                 </tr>
             </thead>
             <tbody>
-                @* Ver quantos itens esta vindo (Se é que esta vindo rsrs) *@ 
-                @*@dt.Rows.Count.ToString()*@
-
 
                 @foreach (DataRow a in dt.Rows)
                 {
-                <tr>
-                    <td>@a["NomeArtista"]</td>
-                    <td>@a["MusicaArtista"]</td>
-                    <td><a class="btn btn-primary oi oi-pencil" @onclick="@(()=> navegacao.NavigateTo("/editar/" + a["artistaId"]))"></a></td>
-                    <td><a @onclick="@(()=> Deletar(@a["artistaId"]))"  class="btn btn-danger oi oi-trash"></a></td> 
-                    @*<td><a @onclick="@(() => a.Delete["artistaId"] )"  class="btn btn-danger oi oi-trash"></a></td>*@ 
-
-                </tr>
+                    <tr>
+                        <td>@a["NomeArtista"]</td>
+                        <td>@a["MusicaArtista"]</td>
+                        <td><a class="btn btn-primary oi oi-pencil" @onclick="@(()=> navegacao.NavigateTo("/editar/" + a["artistaId"]))"></a></td>
+                        <td><a @onclick="@(()=> Deletar(@a["artistaId"]))" class="btn btn-danger oi oi-trash"></a></td>
+                    </tr>
                 }
-       
+
             </tbody>
         </table>
+
+        <Confirmar @ref="@confirma" onCancela="@Cancelar" onConfirma="@DeletarConfirma">
+            <div>Deseja escluir o item ?</div>
+        </Confirmar>
     </div>
+}
 
-<Confirmar @ref="@confirma" onCancela="@Cancelar" onConfirma="@DeletarConfirma">
-    <div>Deseja escluir o item ?</div>
-</Confirmar>
 
-<button class="btn btn-primary" @onclick="@(()=> navegacao.NavigateTo("/cadastroartista"))">Incluir novo Registro</button>
+
 
 
 @code{
@@ -61,11 +66,15 @@ else if (artistas.Count == 0)
     DataTable dt = new DataTable();
     Confirmar confirma;
     object idDeleta;
+    DataRow row;
+    private string Filter = string.Empty;
+    string erro;
 
     protected override async Task OnInitializedAsync()
     {
         dt = await artistaControler.LerDadosDataTable();
-      //artistas = await artistaControler.LerDadosDataTable();
+        row = dt.NewRow();
+        //artistas = await artistaControler.LerDadosDataTable();
     }
     //deletar
     void Deletar(object artistaid)
@@ -77,10 +86,50 @@ else if (artistas.Count == 0)
     {
         await artistaControler.Excluir(idDeleta);
         confirma.Ocultar();
-        artistas = await artistaControler.LerDados();
+        dt = await artistaControler.LerDadosDataTable();
     }
     void Cancelar()
     {
         confirma.Ocultar();
     }
+    //ordernar
+    public void Ordenar(int ordem)
+    {
+        switch (ordem)
+        {
+            case 1:
+                dt = dt.Select().OrderBy(u => u["NomeArtista"]).CopyToDataTable();
+                break;
+            case 2:
+                dt = dt.Select().OrderBy(u => u["MusicaArtista"]).CopyToDataTable();
+                break;
+            default:
+                break;
+        }
+    }
+    //pesquisar
+    public void Pesquisar()
+    {
+        //verificar como retorna os dados sem informar o registro tal como esta no banco de dados
+
+        try
+        {
+            dt = dt.AsEnumerable().Where(x => x.Field<string>("NomeArtista").Contains(Filter)).CopyToDataTable();
+        }
+        catch (Exception ex)
+        {
+
+            erro = "erro " + ex.Message;
+        }
+
+    }
+
+    public async Task Limpar()
+    {
+        Filter = string.Empty;
+        dt = await artistaControler.LerDadosDataTable();
+    }
+
 }
+
+

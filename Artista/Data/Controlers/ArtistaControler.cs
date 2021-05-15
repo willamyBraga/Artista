@@ -51,7 +51,7 @@ namespace Artista.Data.Controlers
 
             using (NpgsqlConnection conn = new NpgsqlConnection(_conexao.conexao))
             {
-                string sql = "SELECT *FROM tbl_artista ORDER BY NomeArtista";
+                string sql = "SELECT *FROM tbl_artista";
                 NpgsqlCommand comando = new NpgsqlCommand(sql, conn);
                 conn.Open();
 
