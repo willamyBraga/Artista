@@ -30,8 +30,8 @@ else
         <table class="table">
             <thead>
                 <tr>
-                    <th><a @onclick="() => Ordenar(1)" style="cursor: pointer">Nome</a></th>
-                    <th><a @onclick="() => Ordenar(2)" style="cursor: pointer">Musica</a></th>
+                    <th><a @onclick="@(() => Ordenar(1))" style="cursor: pointer">Nome</a></th>
+                    <th><a @onclick="@(() => Ordenar(2))" style="cursor: pointer">Musica</a></th>
                     <th>Editar</th>
                     <th>Deletar</th>
                 </tr>
@@ -93,12 +93,12 @@ else
         confirma.Ocultar();
     }
     //ordernar
-    public void Ordenar(int ordem)
+    private void Ordenar(int ordem)
     {
-        switch (ordem)
+        switch (ordem)  
         {
             case 1:
-                dt = dt.Select().OrderBy(u => u["NomeArtista"]).CopyToDataTable();
+                dt = dt.Select().OrderBy(u => u["NomeArtista"]).CopyToDataTable();   
                 break;
             case 2:
                 dt = dt.Select().OrderBy(u => u["MusicaArtista"]).CopyToDataTable();
@@ -114,7 +114,8 @@ else
 
         try
         {
-            dt = dt.AsEnumerable().Where(x => x.Field<string>("NomeArtista").Contains(Filter)).CopyToDataTable();
+            dt = dt.AsEnumerable().Where(x => x.Field<string>("NomeArtista").Contains(Filter)
+            || x.Field<string>("MusicaArtista").Contains(Filter)).CopyToDataTable();
         }
         catch (Exception ex)
         {
