@@ -8,7 +8,7 @@
 <div style="padding: 10px 10px 10px;">
     <h4>Cadastro de artista</h4>
     <button class="btn btn-primary" @onclick="@(()=> navegacao.NavigateTo("/cadastroartista"))">Incluir novo Registro</button>
-    <div>@erro</div>
+    <div class="alert-danger">@erro</div>
     <input type="text" @bind="Filter" @onkeyup="Pesquisar" @onkeydown="Limpar" />
     <button @onclick="Pesquisar" class="btn btn-outline-info">Filtrar</button>
     @*<button @onclick="Limpar" class="btn btn-danger">Limpar</button>*@
@@ -37,7 +37,6 @@ else
                 </tr>
             </thead>
             <tbody>
-
                 @foreach (DataRow a in dt.Rows)
                 {
                     <tr>
@@ -116,6 +115,7 @@ else
         {
             dt = dt.AsEnumerable().Where(x => x.Field<string>("NomeArtista").Contains(Filter)
             || x.Field<string>("MusicaArtista").Contains(Filter)).CopyToDataTable();
+            erro = string.Empty; 
         }
         catch (Exception ex)
         {
