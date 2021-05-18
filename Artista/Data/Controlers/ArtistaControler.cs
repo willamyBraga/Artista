@@ -43,52 +43,7 @@ namespace Artista.Data.Controlers
             conn.Close(); 
             return await Task.FromResult(dt);
         }
-
-        //mostrar/ler dados
-        public async Task<List<ArtistaModel>> LerDados()
-        {
-            List<ArtistaModel> artistas = new List<ArtistaModel>();
-
-            using (NpgsqlConnection conn = new NpgsqlConnection(_conexao.conexao))
-            {
-                string sql = "SELECT *FROM tbl_artista";
-                NpgsqlCommand comando = new NpgsqlCommand(sql, conn);
-                conn.Open();
-
-                NpgsqlDataReader reader = await comando.ExecuteReaderAsync();
-
-                while (reader.Read())
-                {
-                    ArtistaModel registros = new ArtistaModel
-                    {
-                        ArtistaId = int.Parse(reader["artistaId"].ToString()),
-                        ArtistaNome = reader["NomeArtista"].ToString(),
-                        MusicaArtista = reader["MusicaArtista"].ToString()
-
-                    };
-
-                    artistas.Add(registros);
-                }
-                conn.Dispose();
-            }
-
-            return artistas;
-        }
-        //adicionar novos registros
-        public async Task Adicionar(ArtistaModel artista)
-        {
-            using (NpgsqlConnection conn = new NpgsqlConnection(_conexao.conexao))
-            {
-                string sql = "INSERT INTO tbl_artista(NomeArtista, MusicaArtista) VALUES (@nome, @musica)";
-                NpgsqlCommand comando = new NpgsqlCommand(sql, conn);
-                comando.Parameters.AddWithValue("@nome", artista.ArtistaNome);
-                comando.Parameters.AddWithValue("@musica", artista.MusicaArtista);
-                conn.Open();
-                await comando.ExecuteNonQueryAsync();
-                conn.Dispose();
-            }
-        }
-
+         
         //buscar 
         public async Task<ArtistaModel> BuscarArtista(int artistaid)
         {
@@ -129,19 +84,6 @@ namespace Artista.Data.Controlers
             }
         }
         //excluir dados
-        public async Task Excluir(object artistaid)
-        {
-            using (NpgsqlConnection conn = new NpgsqlConnection(_conexao.conexao))
-            {
-                string sql = "DELETE FROM tbl_artista WHERE artistaId= " + artistaid;
-
-                NpgsqlCommand comando = new NpgsqlCommand(sql, conn);
-                conn.Open();
-                await comando.ExecuteNonQueryAsync();
-                conn.Close();
-                conn.Dispose();
-            }
-        }
 
     }
 }

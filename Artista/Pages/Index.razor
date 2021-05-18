@@ -56,24 +56,16 @@ else
     </div>
 }
 
-
-
-
-
 @code{
-    List<ArtistaModel> artistas = new List<ArtistaModel>();
     DataTable dt = new DataTable();
     Confirmar confirma;
     object idDeleta;
-    DataRow row;
     private string Filter = string.Empty;
     string erro;
 
     protected override async Task OnInitializedAsync()
     {
         dt = await artistaControler.LerDadosDataTable();
-        row = dt.NewRow();
-        //artistas = await artistaControler.LerDadosDataTable();
     }
     //deletar
     void Deletar(object artistaid)
@@ -83,9 +75,15 @@ else
     }
     async Task DeletarConfirma()
     {
-        await artistaControler.Excluir(idDeleta);
-        confirma.Ocultar();
-        dt = await artistaControler.LerDadosDataTable();
+        DataRow[] row = dt.Select("artistaId =" + idDeleta);
+        if(row.Length > 0)
+        {
+            row[0].Delete();
+            await artistaControler.AdicionarDataTable(dt); 
+            confirma.Ocultar();
+            dt = await artistaControler.LerDadosDataTable();
+
+        }
     }
     void Cancelar()
     {
@@ -94,10 +92,10 @@ else
     //ordernar
     private void Ordenar(int ordem)
     {
-        switch (ordem)  
+        switch (ordem)
         {
             case 1:
-                dt = dt.Select().OrderBy(u => u["NomeArtista"]).CopyToDataTable();   
+                dt = dt.Select().OrderBy(u => u["NomeArtista"]).CopyToDataTable();
                 break;
             case 2:
                 dt = dt.Select().OrderBy(u => u["MusicaArtista"]).CopyToDataTable();
@@ -115,7 +113,7 @@ else
         {
             dt = dt.AsEnumerable().Where(x => x.Field<string>("NomeArtista").Contains(Filter)
             || x.Field<string>("MusicaArtista").Contains(Filter)).CopyToDataTable();
-            erro = string.Empty; 
+            erro = string.Empty;
         }
         catch (Exception ex)
         {
