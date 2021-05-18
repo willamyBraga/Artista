@@ -79,7 +79,7 @@ else
         if(row.Length > 0)
         {
             row[0].Delete();
-            await artistaControler.AdicionarDataTable(dt); 
+            await artistaControler.AdicionarDataTable(dt);
             confirma.Ocultar();
             dt = await artistaControler.LerDadosDataTable();
 
@@ -95,10 +95,14 @@ else
         switch (ordem)
         {
             case 1:
-                dt = dt.Select().OrderBy(u => u["NomeArtista"]).CopyToDataTable();
+                // dt = dt.Select().OrderBy(u => u["NomeArtista"]).CopyToDataTable();
+                dt.DefaultView.Sort = "NomeArtista ASC" ;
+                dt = dt.DefaultView.ToTable(true);
                 break;
             case 2:
-                dt = dt.Select().OrderBy(u => u["MusicaArtista"]).CopyToDataTable();
+                //dt = dt.Select().OrderBy(u => u["MusicaArtista"]).CopyToDataTable();
+                dt.DefaultView.Sort = "MusicaArtista ASC";
+                dt = dt.DefaultView.ToTable(true);
                 break;
             default:
                 break;

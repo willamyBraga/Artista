@@ -1,6 +1,7 @@
 ﻿@page "/editar/{artistaid:int}"
 @inject NavigationManager navegacao
 @inject ArtistaControler ArtistaControler
+@using System.Data
 
 <div class="card">
     <div class="card-header"><h3>Editar Artista</h3></div>
@@ -9,13 +10,13 @@
         <ul class="list-group">
             <li class="list-group-item mb-3">
                 <label>Nome :</label>
-                <InputText class="form-control" @bind-Value="@artista.ArtistaNome" />
-                <ValidationMessage For="() => artista.ArtistaNome" />
+                <InputText class="form-control" @bind-Value="@NomeArtista" /> 
+                @*<ValidationMessage For="() => artista.ArtistaNome" />*@
             </li>
             <li class="list-group-item mb-3">
                 <label>Musica:</label>
-                <InputText class="form-control" @bind-Value="@artista.MusicaArtista" />
-                <ValidationMessage For="() => artista.MusicaArtista" />
+                <InputText class="form-control" @bind-Value="@MusicaArtista" />
+                @*<ValidationMessage For="() => artista.MusicaArtista" />*@
             </li>
         </ul>
         <li class="list-group-item mb-3">
@@ -36,13 +37,27 @@
 @code {
     [Parameter]
     public int artistaid { get; set; }
+    private DataRow[] row;
+
+    private DataTable dt = new DataTable();
+
+    private string NomeArtista;
+    private string MusicaArtista;
 
     private ArtistaModel artista = new ArtistaModel();
     private string erro;
 
     protected override async Task OnInitializedAsync()
     {
-        artista = await ArtistaControler.BuscarArtista(artistaid);
+        dt = await ArtistaControler.LerDadosDataTable();
+
+
+        foreach (DataRow item in dt.Select("artistaId = " + artistaid))
+        {
+            NomeArtista = item[1].ToString();
+            MusicaArtista = item[2].ToString(); 
+        }
+        
     }
 
     async Task EditArtista(EditContext validacao)
