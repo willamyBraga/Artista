@@ -9,11 +9,23 @@
         <ul class="list-group">
             <li class="list-group-item mb-3">
                 <label>Nome</label>
-                <InputText  class="form-control"  @bind-Value="@NomeArtista" placeholder="Informe o nome do artista"  required maxlength="100" />
+                <InputText class="form-control" @bind-Value="@NomeArtista" placeholder="Informe o nome do artista" required maxlength="100" />
             </li>
             <li class="list-group-item mb-3">
                 <label>Musica</label>
-                <InputText class="form-control"  @bind-Value="@MusicaArtista" placeholder="Informe a Musica do artista " required maxlength="100"/>
+                <InputText class="form-control" @bind-Value="@MusicaArtista" placeholder="Informe a Musica do artista " required maxlength="100" />
+            </li>
+            <li class="list-group-item mb-3">
+                <label>Nome do Autor</label>
+                <InputText class="form-control" @bind-Value="@Autor" placeholder="Informe o nome do autor " required maxlength="100" />
+            </li>
+            <li class="list-group-item mb-3">
+                <label>Data de Criacao</label>
+                <InputText  class="form-control" @bind-Value="@DataCriaco" placeholder="dd/MM/yyyy" required maxlength="12"  />
+            </li>
+            <li class="list-group-item mb-3">
+                <label>Observação</label>
+                <InputTextArea class="form-control" @bind-Value="@Observacao" placeholder="Observações " required  />
             </li>
             <li class="list-group-item mb-3">
                 <div class="btn-toolbar" role="toolbar">
@@ -40,6 +52,9 @@
     //strings usadas para receber os valores do formulario
     string NomeArtista = "";
     string MusicaArtista = "";
+    private string DataCriaco;
+    private string Autor;
+    private string Observacao;
 
     async Task AddArtista()
     {
@@ -48,8 +63,8 @@
             //datatable recebe os dados do banco de dados
             dt = await artista.LerDadosDataTable();
             //datatable dt recebe os valores das strings com os dados, 
-            dt.Rows.Add(null, NomeArtista, MusicaArtista); 
-           
+            dt.Rows.Add(null, NomeArtista, MusicaArtista, DataCriaco, Autor, Observacao);
+
             //manda pra função executar o update
             await artista.AdicionarDataTable(dt);
             sucesso = "Item salvo com sucesso ";

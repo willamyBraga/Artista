@@ -40,10 +40,10 @@ else
                 @foreach (DataRow a in dt.Rows)
                 {
                     <tr>
-                        <td>@a["NomeArtista"]</td>
+                        <td><a style="cursor: pointer" @onclick="@(() => navegacao.NavigateTo("/detalhes/" + a["artistaId"]))"> @a["NomeArtista"]</a></td>
                         <td>@a["MusicaArtista"]</td>
                         <td><a class="btn btn-primary oi oi-pencil" @onclick="@(()=> navegacao.NavigateTo("/editar/" + a["artistaId"]))"></a></td>
-                        <td><a @onclick="@(()=> Deletar(@a["artistaId"]))" class="btn btn-danger oi oi-trash"></a></td>
+                        <td><a @onclick="@(()=>Deletar(@a["artistaId"]))" class="btn btn-danger oi oi-trash"></a></td>
                     </tr>
                 }
 
@@ -101,7 +101,7 @@ else
                 break;
             case 2:
                 //dt = dt.Select().OrderBy(u => u["MusicaArtista"]).CopyToDataTable();
-                dt.DefaultView.Sort = "MusicaArtista ASC";
+                dt.DefaultView.Sort = "MusicaArtista DESC";
                 dt = dt.DefaultView.ToTable(true);
                 break;
             default:
@@ -115,7 +115,7 @@ else
 
         try
         {
-            //Filter é a string que vem do input, que o usuario digita
+            //Filtro é a string que vem do input, que o usuario digita
             dt.DefaultView.RowFilter = "NomeArtista like '" + filtro + "%'";
             dt = dt.DefaultView.ToTable(true);
             erro = string.Empty;

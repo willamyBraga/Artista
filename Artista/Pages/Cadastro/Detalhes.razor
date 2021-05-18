@@ -1,0 +1,60 @@
+﻿@page "/detalhes/{artistaid:int}"
+@inject NavigationManager navegacao
+@inject ArtistaControler ArtistaControler
+@using System.Data
+
+<div class="card-header"><h3>Detalhes do Artista</h3></div>
+<div class="container">
+    <div class="form-group">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nome artista</th>
+                    <th>Musica</th>
+                    <th>Autor</th>
+                    <th>Data de Criacao</th>
+                    <th>Observações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@NomeArtista</td>
+                    <td>@MusicaArtista</td>
+                    <td>@Autor</td>
+                    <td>@DataCriaco</td>
+                    <td>@Observacao</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public int artistaid { get; set; }
+
+    private DataTable dt = new DataTable();
+    //variaveis para receber os indices com os valores
+    private string NomeArtista;
+    private string MusicaArtista;
+    private string DataCriaco;
+    private string Autor;
+    private string Observacao;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        dt = await ArtistaControler.LerDadosDataTable();
+
+        foreach (DataRow item in dt.Select("artistaId = " + artistaid))
+        {
+            NomeArtista = item[1].ToString();
+            MusicaArtista = item[2].ToString();
+            DataCriaco = item[3].ToString();
+            Autor = item[4].ToString();
+            Observacao = item[5].ToString();
+        }
+
+    }
+}

@@ -51,7 +51,6 @@
     {
         dt = await ArtistaControler.LerDadosDataTable();
 
-
         foreach (DataRow item in dt.Select("artistaId = " + artistaid))
         {
             NomeArtista = item[1].ToString();
