@@ -18,11 +18,11 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>@NomeArtista</td>
-                    <td>@MusicaArtista</td>
-                    <td>@Autor</td>
-                    <td>@DataCriaco</td>
-                    <td>@Observacao</td>
+                    <td>@row[0]["NomeArtista"]</td>
+                    <td>@row[0]["MusicaArtista"]</td>
+                    <td>@row[0]["AutorMusica"]</td>
+                    <td>@row[0]["DataCriacao"]</td>
+                    <td>@row[0]["ObservacaoMusica"]</td>
                 </tr>
             </tbody>
         </table>
@@ -35,26 +35,14 @@
     public int artistaid { get; set; }
 
     private DataTable dt = new DataTable();
-    //variaveis para receber os indices com os valores
-    private string NomeArtista;
-    private string MusicaArtista;
-    private string DataCriaco;
-    private string Autor;
-    private string Observacao;
+   
 
+    DataRow[] row;
 
     protected override async Task OnInitializedAsync()
     {
         dt = await ArtistaControler.LerDadosDataTable();
 
-        foreach (DataRow item in dt.Select("artistaId = " + artistaid))
-        {
-            NomeArtista = item[1].ToString();
-            MusicaArtista = item[2].ToString();
-            DataCriaco = item[3].ToString();
-            Autor = item[4].ToString();
-            Observacao = item[5].ToString();
-        }
-
+        row = dt.Select("artistaId =" + artistaid);        
     }
 }
