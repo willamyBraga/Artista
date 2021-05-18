@@ -9,7 +9,7 @@
     <h4>Cadastro de artista</h4>
     <button class="btn btn-primary" @onclick="@(()=> navegacao.NavigateTo("/cadastroartista"))">Incluir novo Registro</button>
     <div class="alert-danger">@erro</div>
-    <input type="text" @bind="Filter" @onkeyup="Pesquisar" @onkeydown="Limpar" />
+    <input type="text" @bind="filtro" @onkeyup="Pesquisar" @onkeydown="Limpar" />
     <button @onclick="Pesquisar" class="btn btn-outline-info">Filtrar</button>
     @*<button @onclick="Limpar" class="btn btn-danger">Limpar</button>*@
 </div>
@@ -60,7 +60,7 @@ else
     DataTable dt = new DataTable();
     Confirmar confirma;
     object idDeleta;
-    private string Filter = string.Empty;
+    private string filtro = string.Empty;
     string erro;
 
     protected override async Task OnInitializedAsync()
@@ -115,8 +115,9 @@ else
 
         try
         {
-            dt = dt.AsEnumerable().Where(x => x.Field<string>("NomeArtista").Contains(Filter)
-            || x.Field<string>("MusicaArtista").Contains(Filter)).CopyToDataTable();
+            //Filter é a string que vem do input, que o usuario digita
+            dt.DefaultView.RowFilter = "NomeArtista like '" + filtro + "%'";
+            dt = dt.DefaultView.ToTable(true);
             erro = string.Empty;
         }
         catch (Exception ex)
@@ -129,7 +130,7 @@ else
 
     public async Task Limpar()
     {
-        Filter = string.Empty;
+        filtro = string.Empty;
         dt = await artistaControler.LerDadosDataTable();
     }
 
