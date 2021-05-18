@@ -47,12 +47,9 @@
         {
             //datatable recebe os dados do banco de dados
             dt = await artista.LerDadosDataTable();
-            row = dt.NewRow();
-            //datarow recebe as strings com os dados
-            row["NomeArtista"] = NomeArtista;
-            row["MusicaArtista"] = MusicaArtista;
-            //datatable dt adiciona os dados
-            dt.Rows.Add(row);
+            //datatable dt recebe os valores das strings com os dados, 
+            dt.Rows.Add(null, NomeArtista, MusicaArtista); 
+           
             //manda pra função executar o update
             await artista.AdicionarDataTable(dt);
             sucesso = "Item salvo com sucesso ";
