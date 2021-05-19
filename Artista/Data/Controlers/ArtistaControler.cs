@@ -30,7 +30,7 @@ namespace Artista.Data.Controlers
             return await Task.FromResult(dt);                     
         }
 
-        //adicionar dados com datatable
+        //faz as operações crud com datatable
         public async Task<DataTable> AdicionarDataTable(DataTable dt)
         {
             NpgsqlConnection conn = new NpgsqlConnection(_conexao.conexao);
@@ -43,47 +43,6 @@ namespace Artista.Data.Controlers
             conn.Close(); 
             return await Task.FromResult(dt);
         }
-         
-        //buscar 
-        public async Task<ArtistaModel> BuscarArtista(int artistaid)
-        {
-            ArtistaModel registro = new ArtistaModel();
-            using (NpgsqlConnection conn = new NpgsqlConnection(_conexao.conexao))
-            {
-                string sql = "SELECT *FROM tbl_artista WHERE artistaId =" + artistaid;
-                NpgsqlCommand comando = new NpgsqlCommand(sql, conn);
-                conn.Open();
-                NpgsqlDataReader comReader = await comando.ExecuteReaderAsync();
-
-                if (comReader.Read())
-                {
-                    registro.ArtistaId = Convert.ToInt32(comReader["artistaId"].ToString());
-                    registro.ArtistaNome = comReader["NomeArtista"].ToString();
-                    registro.MusicaArtista = comReader["MusicaArtista"].ToString();
-                }
-                conn.Close();
-                conn.Dispose();
-            }
-            return registro;
-        }
-        //editar 
-        public async Task Editar(ArtistaModel artista, int artistaid)
-        {
-            using (NpgsqlConnection conn = new NpgsqlConnection(_conexao.conexao))
-            {
-                string sql = "UPDATE tbl_artista SET NomeArtista=@nome, MusicaArtista=@musica WHERE artistaId=@id";
-                NpgsqlCommand comando = new NpgsqlCommand(sql, conn);
-                comando.Parameters.AddWithValue("@nome", artista.ArtistaNome);
-                comando.Parameters.AddWithValue("@musica", artista.MusicaArtista);
-                comando.Parameters.AddWithValue("@id", artistaid);
-
-                conn.Open();
-                await comando.ExecuteNonQueryAsync();
-                conn.Close();
-                conn.Dispose();
-            }
-        }
-        //excluir dados
-
+             
     }
 }
