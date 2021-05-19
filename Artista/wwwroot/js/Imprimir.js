@@ -1,4 +1,4 @@
-﻿function cont(){
+﻿function Impressao(){
    var conteudo = document.getElementById('print').innerHTML;
    tela_impressao = window.open('about:blank');
    tela_impressao.document.write(conteudo);

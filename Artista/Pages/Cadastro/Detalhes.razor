@@ -1,11 +1,12 @@
 ﻿@page "/detalhes/{artistaid:int}"
 @inject NavigationManager navegacao
 @inject ArtistaControler ArtistaControler
+@inject IJSRuntime js
 @using System.Data
 
-<div class="card-header"><center><h3>Detalhes do Artista</h3></center></div>
 <div class="container">
-    <div class="form-group">
+    <div class="form-group" id="print">
+        <div class="card-header"><center><h3>Detalhes do Artista</h3></center></div>
         <table class="table">
             <thead>
                 <tr>
@@ -27,6 +28,9 @@
             </tbody>
         </table>
     </div>
+    <div class="card-footer">
+        <button type="button" class="btn btn-success oi oi-print" onclick="Impressao();"> Imprimir</button>
+    </div>
 </div>
 
 
@@ -36,8 +40,8 @@
 
     private DataTable dt = new DataTable();
    
-
     DataRow[] row;
+    
 
     protected override async Task OnInitializedAsync()
     {
