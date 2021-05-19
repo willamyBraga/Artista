@@ -5,28 +5,37 @@
 
 <div class="card">
     <div class="card-header"><h3>Editar Artista</h3></div>
-    <EditForm Model="@artista" OnValidSubmit="@EditArtista">
-        @*<DataAnnotationsValidator />*@
+    <EditForm Model="@dt" OnValidSubmit="@EditArtista">
         <ul class="list-group">
             <li class="list-group-item mb-3">
-                <label>Nome :</label>
-                <InputText class="form-control" @bind-Value="@NomeArtista" /> 
-                @*<ValidationMessage For="() => artista.ArtistaNome" />*@
+                <label>Nome</label>
+                <InputText class="form-control" @bind-Value="@NomeArtista" placeholder="Informe o nome do artista" required maxlength="100" />
             </li>
             <li class="list-group-item mb-3">
-                <label>Musica:</label>
-                <InputText class="form-control" @bind-Value="@MusicaArtista" />
-                @*<ValidationMessage For="() => artista.MusicaArtista" />*@
+                <label>Musica</label>
+                <InputText class="form-control" @bind-Value="@MusicaArtista" placeholder="Informe a Musica do artista " required maxlength="100" />
+            </li>
+            <li class="list-group-item mb-3">
+                <label>Nome do Autor</label>
+                <InputText class="form-control" @bind-Value="@Autor" placeholder="Informe o nome do autor " required maxlength="100" />
+            </li>
+            <li class="list-group-item mb-3">
+                <label>Data de Criacao</label>
+                <InputText class="form-control" @bind-Value="@Data" placeholder="dd/MM/yyyy" required maxlength="12" />
+            </li>
+            <li class="list-group-item mb-3">
+                <label>Observação</label>
+                <InputTextArea class="form-control" @bind-Value="@Observacao" placeholder="Observações " required />
+            </li>
+            <li class="list-group-item mb-3">
+                <div class="btn-toolbar" role="toolbar">
+                    <div class="btn-group-sm float-lg-right">
+                        <button type="submit" class="btn btn-primary">Editar</button>
+                        <button type="button" class="btn me-s2 btn-danger" @onclick="@Cancelar">Cancelar</button>
+                    </div>
+                </div>
             </li>
         </ul>
-        <li class="list-group-item mb-3">
-            <div class="btn-toolbar" role="toolbar">
-                <div class="btn-group-sm float-lg-right">
-                    <button type="submit" class="btn me-s2 btn-success">Salvar</button>
-                    <button type="button" class="btn me-s2 btn-danger" @onclick="@Cancelar">Cancelar</button>
-                </div>
-            </div>
-        </li>
     </EditForm>
 </div>
 
@@ -41,8 +50,12 @@
 
     private DataTable dt = new DataTable();
 
+    //strings para captura os dados do usuario
     private string NomeArtista;
     private string MusicaArtista;
+    private string Autor;
+    private string Data;
+    private string Observacao;
 
     private ArtistaModel artista = new ArtistaModel();
     private string erro;
@@ -54,20 +67,29 @@
         foreach (DataRow item in dt.Select("artistaId = " + artistaid))
         {
             NomeArtista = item[1].ToString();
-            MusicaArtista = item[2].ToString(); 
+            MusicaArtista = item[2].ToString();
+            Data = item[3].ToString();
+            Autor = item[4].ToString();
+            Observacao = item[5].ToString();
         }
-        
+
     }
 
     async Task EditArtista(EditContext validacao)
     {
         try
-        {
-            if (validacao.Validate())
-            {
-                await ArtistaControler.Editar(artista, artistaid);
-                navegacao.NavigateTo("/");
-            }
+        {   //seleciona o campo pelo id vindo pela url
+            row = dt.Select("artistaId =" + artistaid);
+            //seta os novos valores informado pelo usuario
+            row[0]["NomeArtista"] = NomeArtista;
+            row[0]["MusicaArtista"] = MusicaArtista;
+            row[0]["AutorMusica"] = Autor;
+            row[0]["DataCriacao"] = Data;
+            row[0]["ObservacaoMusica"] = Observacao; 
+            //envia a dt com os dados atualizados para fazer o update
+            await ArtistaControler.AdicionarDataTable(dt);
+            //envia pra home
+            navegacao.NavigateTo("/");
         }
         catch (Exception ex)
         {
