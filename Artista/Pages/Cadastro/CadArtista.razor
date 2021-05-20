@@ -20,8 +20,8 @@
                 <InputText class="form-control" @bind-Value="@Autor" placeholder="Informe o nome do autor " required maxlength="100" />
             </li>
             <li class="list-group-item mb-3">
-                <label>Data de Criacao</label>
-                <InputText  class="form-control" onKeyUp="formataData(this)" @bind-Value="@DataCriaco" placeholder="dd/MM/yyyy" required maxlength="12"  />
+                <label>Data de Criação</label>
+                <InputText  class="form-control" onkeYup="formataData(this)" @bind-Value="@DataCriaco" placeholder="dd/MM/yyyy" required maxlength="12"  />
             </li>
             <li class="list-group-item mb-3">
                 <label>Observação</label>
@@ -52,7 +52,7 @@
     //strings usadas para receber os valores do formulario
     string NomeArtista = "";
     string MusicaArtista = "";
-    private string DataCriaco;
+    private string DataCriaco; 
     private string Autor;
     private string Observacao;
 

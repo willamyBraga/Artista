@@ -63,7 +63,8 @@
     protected override async Task OnInitializedAsync()
     {
         dt = await ArtistaControler.LerDadosDataTable();
-
+        //percorre tds os dados do datatable, e seta os valores nas strings pra serem mostradas pro user
+        //passa os indices de cada coluna, 1 = nomeArtista, 2 = MusicaArtista, 3 Data, 4, autor, 5 observação
         foreach (DataRow item in dt.Select("artistaId = " + artistaid))
         {
             NomeArtista = item[1].ToString();
