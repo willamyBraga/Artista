@@ -21,7 +21,7 @@
             </li>
             <li class="list-group-item mb-3">
                 <label>Data de Criacao</label>
-                <InputText class="form-control" @bind-Value="@Data" placeholder="dd/MM/yyyy" required maxlength="12" />
+                <InputText class="form-control" onKeyUp="formataData(this)" @bind-Value="@Data" placeholder="dd/MM/yyyy" required maxlength="12" />
             </li>
             <li class="list-group-item mb-3">
                 <label>Observação</label>
