@@ -1,5 +1,5 @@
 ﻿
-
+//função responsavel pela impressão no brawser 
 function Impressao() {
    var conteudo = document.getElementById('print').innerHTML;
    tela_impressao = window.open('about:blank');
@@ -8,7 +8,7 @@ function Impressao() {
    tela_impressao.window.close();
 }
 
-
+//saveAsFile, função responsavel pela geração do excel 
 window.saveAsFile = function (fileName, byteBase64) {
 	var link = this.document.createElement('a');
 	link.download = fileName;
@@ -18,7 +18,6 @@ window.saveAsFile = function (fileName, byteBase64) {
 	this.document.body.removeChild(link);
 }
 //formatar data formato dd/MM/yyy
-
 function formataData(val) {
 	var pass = val.value;
 	var expr = /[0123456789]/;
