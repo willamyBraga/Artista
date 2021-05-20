@@ -49,13 +49,13 @@ app {
     text-overflow: ellipsis;
 }
 
-.sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+.sidebar {  
+    background-color: #19385D; 
 }
 
-    .sidebar .top-row {
+    /*.sidebar .top-row {
         background-color: rgba(0,0,0,0.4);
-    }
+    }*/
 
     .sidebar .navbar-brand {
         font-size: 1.1rem;
