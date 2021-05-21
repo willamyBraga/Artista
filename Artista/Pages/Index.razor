@@ -32,24 +32,27 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th><a title="Clique para ordernar por nome" style="cursor: pointer">Nome</a>
+                <th>
+                    <a title="Clique para ordernar por nome" style="cursor: pointer">Nome</a>
+                    @*dropdown responsavel pelo filtro*@
+
                     <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="ordenacao" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             @tituloPrincipal
                         </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <div class="dropdown-menu" aria-labelledby="ordenacao">
                             <a class="dropdown-item" @onclick="@(()=> Ordenar(1))" href="#">@titulo</a>
                             <a class="dropdown-item" @onclick="@(()=>Ordenar(2))" href="#">@tituloDESC</a>
                         </div>
                     </div>
                 </th>
-                
+                @*dropdown responsavel pelo filtro*@
                 <th><a title="Clique para ordenar por música" style="cursor: pointer">Musica</a>
                     <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="ordenacao" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             @tituloPrincipal2
                         </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <div class="dropdown-menu" aria-labelledby="ordenacao">
                             <a class="dropdown-item" @onclick="@(()=> Ordenar(3))" href="#">@titulo</a>
                             <a class="dropdown-item" @onclick="@(()=>Ordenar(4))" href="#">@tituloDESC</a>
                         </div>
