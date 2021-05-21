@@ -130,23 +130,23 @@ else
             case 1:
                 dt.DefaultView.Sort = "NomeArtista ASC";
                 dt = dt.DefaultView.ToTable(true);
-                tituloPrincipal = "Ordem crescente";
+                tituloPrincipal = "Ordem A ao Z";
                 break;
 
             case 2:
                 dt.DefaultView.Sort = "NomeArtista DESC";
                 dt = dt.DefaultView.ToTable(true);
-                tituloPrincipal = "Ordem decrescente";
+                tituloPrincipal = "Ordem Z ao A";
                 break;
             case 3:
                 dt.DefaultView.Sort = "MusicaArtista ASC";
                 dt = dt.DefaultView.ToTable(true);
-                tituloPrincipal2 = "Ordem crescente";
+                tituloPrincipal2 = "Ordem A ao Z";
                 break;
             case 4:
                 dt.DefaultView.Sort = "MusicaArtista DESC";
                 dt = dt.DefaultView.ToTable(true);
-                tituloPrincipal2 = "Ordem decrescente";
+                tituloPrincipal2 = "Ordem Z ao A";
                 break;
             default:
                 dt.DefaultView.Sort = "NomeArtista DESC";
