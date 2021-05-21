@@ -41,8 +41,8 @@ else
                             @tituloPrincipal
                         </button>
                         <div class="dropdown-menu" aria-labelledby="ordenacao">
-                            <a class="dropdown-item" @onclick="@(()=> Ordenar(1))" href="#">@titulo</a>
-                            <a class="dropdown-item" @onclick="@(()=>Ordenar(2))" href="#">@tituloDESC</a>
+                            <a class="dropdown-item" @onclick="@(()=> Ordenar(1))" href="#">Crescente</a>
+                            <a class="dropdown-item" @onclick="@(()=>Ordenar(2))" href="#">Decrescente</a>
                         </div>
                     </div>
                 </th>
@@ -53,8 +53,8 @@ else
                             @tituloPrincipal2
                         </button>
                         <div class="dropdown-menu" aria-labelledby="ordenacao">
-                            <a class="dropdown-item" @onclick="@(()=> Ordenar(3))" href="#">@titulo</a>
-                            <a class="dropdown-item" @onclick="@(()=>Ordenar(4))" href="#">@tituloDESC</a>
+                            <a class="dropdown-item" @onclick="@(()=> Ordenar(3))" href="#">Crescente</a>
+                            <a class="dropdown-item" @onclick="@(()=>Ordenar(4))" href="#">Decrescente</a>
                         </div>
                     </div>
                 </th>
@@ -92,10 +92,8 @@ else
     private string filtro = string.Empty;
     string erro;
 
-    private string titulo = "Crescente";
     private string tituloPrincipal = "Ordenar";
     private string tituloPrincipal2 = "Ordenar";
-    private string tituloDESC = "Decrescente";
 
     protected override async Task OnInitializedAsync()
     {
