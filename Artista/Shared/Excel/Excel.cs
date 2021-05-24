@@ -1,24 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
-using System.IO.Packaging;
 using ClosedXML.Excel;
 using System.Data;
-using artista = Artista.Data.Controlers;
-using js = Microsoft.JSInterop.IJSRuntime;
 using Microsoft.JSInterop;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Artista.Shared.Excel
 {
     public class Excel
     {
-        public async Task ExcelFile(DataTable dtfront)
+        private readonly IJSRuntime js;
+
+        public Excel(IJSRuntime js)
+        {
+            this.js = js;
+        }
+
+        public  async Task ExcelFile(DataTable dtfront)
         {
             //caminho do arquivo
-            string FilePath = "artista.xlsx";
             XLWorkbook wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("artista");
             ws.Cell(1, 1).Value = "Nome Artista";
@@ -39,10 +39,16 @@ namespace Artista.Shared.Excel
                 ws.Columns().AdjustToContents();
 
                 index++;
-            }            
-            ws.Columns().AdjustToContents();
-            wb.SaveAs(FilePath);
-            await Task.FromResult(FilePath); 
+            }
+            using (var stream = new MemoryStream())
+            {
+                wb.SaveAs(stream);
+                var content = stream.ToArray();
+                var fileName = "artista.xlsx";
+                await js.InvokeAsync<object>("saveAsFile", fileName, Convert.ToBase64String(content));
+            }
         }
     }
+
 }
+
