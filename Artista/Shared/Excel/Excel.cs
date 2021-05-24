@@ -18,7 +18,7 @@ namespace Artista.Shared.Excel
         public async Task ExcelFile(DataTable dtfront)
         {
             //caminho do arquivo
-            string FilePath = "C:\\Users\\willamy\\Downloads\\artista.xlsx";
+            string FilePath = "artista.xlsx";
             XLWorkbook wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("artista");
             ws.Cell(1, 1).Value = "Nome Artista";
@@ -39,10 +39,7 @@ namespace Artista.Shared.Excel
                 ws.Columns().AdjustToContents();
 
                 index++;
-            }
-            
-            var memory = new MemoryStream();
-
+            }            
             ws.Columns().AdjustToContents();
             wb.SaveAs(FilePath);
             await Task.FromResult(FilePath); 
