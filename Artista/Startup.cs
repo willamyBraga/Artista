@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Artista.Data;
 using Artista.Data.Controlers;
+using Artista.Shared.Excel;
 
 namespace Artista
 {
@@ -31,7 +32,9 @@ namespace Artista
             var conexao = new StringConexao(Configuration.GetConnectionString("Conexao"));
 
             services.AddRazorPages();
-            services.AddScoped<ArtistaControler>(); 
+            services.AddScoped<ArtistaControler>();
+            services.AddScoped<Excel>();
+
             services.AddServerSideBlazor();
             services.AddSingleton(conexao);
         }

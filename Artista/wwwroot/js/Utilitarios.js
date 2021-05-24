@@ -8,6 +8,12 @@ function Impressao() {
    tela_impressao.window.close();
 }
 
+function Mudar() {
+	let el = document.getElementById('elemento');
+	el.classList.remove('btn btn-primary');
+	el.classList.add('btn btn-danger');
+}
+
 //saveAsFile, função responsavel pela geração do excel 
 window.saveAsFile = function (fileName, byteBase64) {
 	var link = this.document.createElement('a');

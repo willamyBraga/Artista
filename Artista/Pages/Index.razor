@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using Artista.Data.Model
 @inject NavigationManager navegacao
+@inject Excel excel
 @inject ArtistaControler artistaControler
 @using System.Data;
 @using ClosedXML.Excel
@@ -28,61 +29,39 @@ else if (dt.Rows.Count == 0)
 }
 else
 {
-<div class="form-group">    
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    <a title="Clique para ordernar por nome" style="cursor: pointer">Nome</a>
-                    @*dropdown responsavel pelo filtro*@
-
-                    <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="ordenacao" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            @tituloPrincipal
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="ordenacao">
-                            <a class="dropdown-item" @onclick="@(()=> Ordenar(1))" href="#">Crescente</a>
-                            <a class="dropdown-item" @onclick="@(()=>Ordenar(2))" href="#">Decrescente</a>
-                        </div>
-                    </div>
-                </th>
-                @*dropdown responsavel pelo filtro*@
-                <th><a title="Clique para ordenar por música" style="cursor: pointer">Musica</a>
-                    <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="ordenacao" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            @tituloPrincipal2
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="ordenacao">
-                            <a class="dropdown-item" @onclick="@(()=> Ordenar(3))" href="#">Crescente</a>
-                            <a class="dropdown-item" @onclick="@(()=>Ordenar(4))" href="#">Decrescente</a>
-                        </div>
-                    </div>
-                </th>
-                <th>Editar</th>
-                <th>Deletar</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (DataRow a in dt.Rows)
-            {
-                <tr id="active">
-                    <td><a title="Ver detalhes" style="cursor: pointer" @onclick="@(() => navegacao.NavigateTo("/detalhes/" + a["artistaId"]))">@a["NomeArtista"]</a></td>
-                    <td>@a["MusicaArtista"]</td>
-                    <td><a title="Editar" style="cursor: pointer" class="btn btn-primary oi oi-pencil" @onclick="@(()=> navegacao.NavigateTo("/editar/" + a["artistaId"]))"></a></td>
-                    <td><a style="cursor: pointer" title="Excluir" @onclick="@(()=>Deletar(@a["artistaId"]))" class="btn btn-danger oi oi-trash"></a></td>
+    <div class="form-group">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th><a title="Clique para ordernar por nome" style="cursor: pointer">Nome</a></th>
+                    <a @onclick="Ordenar" class="@mudaclasse" style="cursor: pointer"></a>
+                    <th><a title="Clique para ordenar por música" style="cursor: pointer">Musica</a></th>
+                    <th>Editar</th>
+                    <th>Deletar</th>
                 </tr>
-            }
+            </thead>
+            <tbody>
+                @foreach (DataRow a in dt.Rows)
+                {
+                    <tr id="active">
+                        <td><a title="Ver detalhes" style="cursor: pointer" @onclick="@(() => navegacao.NavigateTo("/detalhes/" + a["artistaId"]))">@a["NomeArtista"]</a></td>
+                        <td></td>
+                        <td>@a["MusicaArtista"]</td>
+                        <td><a title="Editar" style="cursor: pointer" class="btn btn-primary oi oi-pencil" @onclick="@(()=> navegacao.NavigateTo("/editar/" + a["artistaId"]))"></a></td>
+                        <td><a style="cursor: pointer" title="Excluir" @onclick="@(()=>Deletar(@a["artistaId"]))" class="btn btn-danger oi oi-trash"></a></td>
+                    </tr>
+                }
 
-        </tbody>
-    </table>
-    <div>
-        <button class="btn btn-primary" type="button" @onclick="@(() => ExcelExport())">Exportar para o Excel</button>
+            </tbody>
+        </table>
+        <div>
+            <button class="btn btn-primary" type="button" @onclick="@(() => ExcelExport())">Exportar para o Excel</button>           
+        </div>
+
+        <Confirmar @ref="@confirma" onCancela="@Cancelar" onConfirma="@DeletarConfirma">
+            <div>Deseja escluir o item ?</div>
+        </Confirmar>
     </div>
-
-    <Confirmar @ref="@confirma" onCancela="@Cancelar" onConfirma="@DeletarConfirma">
-        <div>Deseja escluir o item ?</div>
-    </Confirmar>
-</div>
 }
 
 @code{
@@ -91,6 +70,8 @@ else
     object idDeleta;
     private string filtro = string.Empty;
     string erro;
+
+    string mudaclasse = "fa fa-arrow-circle-up";
 
     private string tituloPrincipal = "Ordenar";
     private string tituloPrincipal2 = "Ordenar";
@@ -122,38 +103,20 @@ else
         confirma.Ocultar();
     }
     //ordernar
-    private void Ordenar(int ordem)
+    private void Ordenar()
     {
-
-        switch (ordem)
+        if(mudaclasse == "fa fa-arrow-circle-up")
         {
-            case 1:
-                dt.DefaultView.Sort = "NomeArtista ASC";
-                dt = dt.DefaultView.ToTable(true);
-                tituloPrincipal = "Ordem A ao Z";
-                break;
-
-            case 2:
-                dt.DefaultView.Sort = "NomeArtista DESC";
-                dt = dt.DefaultView.ToTable(true);
-                tituloPrincipal = "Ordem Z ao A";
-                break;
-            case 3:
-                dt.DefaultView.Sort = "MusicaArtista ASC";
-                dt = dt.DefaultView.ToTable(true);
-                tituloPrincipal2 = "Ordem A ao Z";
-                break;
-            case 4:
-                dt.DefaultView.Sort = "MusicaArtista DESC";
-                dt = dt.DefaultView.ToTable(true);
-                tituloPrincipal2 = "Ordem Z ao A";
-                break;
-            default:
-                dt.DefaultView.Sort = "NomeArtista DESC";
-                dt = dt.DefaultView.ToTable(true);
-                break;
+            dt.DefaultView.Sort = "NomeArtista ASC";
+            dt = dt.DefaultView.ToTable(true);
+            mudaclasse = "fa fa-arrow-down";
         }
-
+        else if(mudaclasse == "fa fa-arrow-down")
+        {
+            dt.DefaultView.Sort = "NomeArtista DESC";
+            dt = dt.DefaultView.ToTable(true);
+            mudaclasse = "fa fa-arrow-circle-up";
+        }      
     }
     //pesquisar
     public void Pesquisar()
@@ -183,41 +146,9 @@ else
     public async Task ExcelExport()
     {
         dt = await artistaControler.LerDadosDataTable();
+        await excel.ExcelFile(dt);
 
-        using (var workbook = new XLWorkbook())
-        {
-            IXLWorksheet worksheet = workbook.Worksheets.Add("Artista");
-            worksheet.Cell(1, 1).Value = "Nome Artista";
-            worksheet.Cell(1, 2).Value = "Nome da Musica";
-            worksheet.Cell(1, 3).Value = "Autor";
-            worksheet.Cell(1, 4).Value = "Data de Criacao";
-            worksheet.Cell(1, 5).Value = "Observacao";
-            //atribui uma font bold
-            for (int i = 1; i <= 5; i++)
-            {
-                worksheet.Cell(1, i).Style.Font.Bold = true;
-            }
-            int index = 1;
-            foreach (DataRow item in dt.Rows)
-            {
-                worksheet.Cell(index + 1, 1).Value = item["NomeArtista"];
-                worksheet.Cell(index + 1, 2).Value = item["MusicaArtista"];
-                worksheet.Cell(index + 1, 3).Value = item["AutorMusica"];
-                worksheet.Cell(index + 1, 4).Value = item["DataCriacao"];
-                worksheet.Cell(index + 1, 5).Value = item["ObservacaoMusica"];
 
-                worksheet.Columns().AdjustToContents();
-
-                index++;
-            }
-            using (var arrayArtista = new MemoryStream())
-            {
-                workbook.SaveAs(arrayArtista);
-                var converte = arrayArtista.ToArray();
-
-                var nomeExcel = "Artista.xlsx";
-                await js.InvokeAsync<object>("saveAsFile", nomeExcel, Convert.ToBase64String(converte));
-            }
-        }
+        //pontos a corrigir, 1: Retornar no brawser o querivo sendo baixado. 2: Corrigir o retun file. 
     }
 }
