@@ -21,10 +21,12 @@ namespace Artista.Data.Controlers
         public static string Senha { get; private set; }
         public static string UsuarioPerfil { get; private set; }
         public static bool UserLogado { get; private set; }
+
         public static void Logout()
         {
             UserLogado = false;
             LoginNome = string.Empty;
+            UsuarioPerfil = string.Empty; 
             Senha = string.Empty;
         }
 
@@ -57,7 +59,7 @@ namespace Artista.Data.Controlers
                     Senha = item["loginUsuario"].ToString()
                 };
                 usuarios.Add(registro);
-                ;
+                
             }
             return usuarios;
         }
@@ -97,34 +99,6 @@ namespace Artista.Data.Controlers
             conn.Close();
             return await Task.FromResult(dt);
         }
-        public async Task<UserLogin> LoginUsuario(string senha)
-        {
-            UserLogin registro = new UserLogin();
-
-            NpgsqlConnection conn = new NpgsqlConnection(_conexao.conexao);
-            conn.Open();
-
-            DataTable dtLogin = new DataTable();
-
-            string sql = "select* from tbl_usuario where senha = " + senha;
-
-            NpgsqlDataAdapter daUsuario = new NpgsqlDataAdapter(sql, conn);
-            daUsuario.Fill(dtLogin);
-
-            foreach (DataRow item in dtLogin.Rows)
-            {
-                registro.Login = item["loginUsuario"].ToString();
-                registro.Senha = item["senha"].ToString();
-            }
-
-            return await Task.FromResult(registro);
-        }
-        //analise do problema econtrado... 
-        public async Task<DataTable> RecebeDt()
-        {
-            DataTable dt = new DataTable();
-            return await Task.FromResult(dt);
-
-        }
+             
     }
 }

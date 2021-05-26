@@ -166,9 +166,5 @@ else
         dt = await artistaControler.LerDadosDataTable();
         await excel.ExcelFile(dt);
     }
-    async Task TesteDt()
-    {
-        DataTable dttest;
-        dttest = await user.RecebeDt();
-    }
+   
 }

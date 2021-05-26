@@ -1,4 +1,6 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
+﻿@inject Usuario user
+
+<div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">Artista</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
@@ -12,7 +14,12 @@
                 <span class="oi oi-home" aria-hidden="true"></span> Home
             </NavLink>
         </li>
-     
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="/" @onclick="@(() => Usuario.Logout())">
+                <span class="oi oi-account-logout" aria-hidden="true"></span> Sair
+            </NavLink>
+        </li>
+
     </ul>
 </div>
 
