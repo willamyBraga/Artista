@@ -1,65 +1,65 @@
-﻿@page "/"
-@using Artista.Data.Model
+﻿@page "/home"
 @inject NavigationManager navegacao
 @inject Excel excel
 @inject ArtistaControler artistaControler
-@using System.Data;
-@using ClosedXML.Excel
 @inject IJSRuntime js
-@using System.IO;
+@inject Usuario user
 
-<div style="padding: 10px 10px 10px;">
-    <h4>Cadastro de artista</h4>
-    <button class="btn btn-primary" @onclick="@(()=> navegacao.NavigateTo("/cadastroartista"))">Incluir novo Registro</button>
-    <div class="alert-danger">@erro</div>
-    <input type="text" @bind="filtro" @onkeyup="Pesquisar" @onkeydown="Limpar" />
-    <button @onclick="Pesquisar" class="btn btn-outline-info">Filtrar</button>
-    @*<button @onclick="Limpar" class="btn btn-danger">Limpar</button>*@
-</div>
-
-@* a função onkeyup e onkeydown habilita as teclas enter e Backspace   *@
-
-@if (dt == null)
+@if (Usuario.UsuarioPerfil == PerfilUsuario.Administrador)
 {
-    <h1>Carregando...</h1>
-}
-else if (dt.Rows.Count == 0)
-{
-    <h1>Não existem cadastros...</h1>
+    <div style="padding: 10px 10px 10px;">
+        <h4>Cadastro de artista</h4>
+        <button class="btn btn-primary" @onclick="@(()=> navegacao.NavigateTo("/cadastroartista"))">Incluir novo Registro</button>
+        <div class="alert-danger">@erro</div>
+        <input type="text" @bind="filtro" @onkeyup="Pesquisar" @onkeydown="Limpar" />
+        <button @onclick="Pesquisar" class="btn btn-outline-info">Filtrar</button>
+    </div>
+    @if (dt == null)
+    {
+        <h1>Carregando...</h1>
+    }
+    else if (dt.Rows.Count == 0)
+    {
+        <h1>Não existem cadastros...</h1>
+    }
+    else
+    {
+        <div class="form-group">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th><a title="Clique para ordernar por nome" style="cursor: pointer">Nome</a><a @onclick="@(() => Ordenar(1))" class="@mudaclasse" style="margin-left:8px; cursor: pointer"></a></th>
+                        <th><a title="Clique para ordenar por música" style="cursor: pointer">Musica</a><a @onclick="@(() => Ordenar(2))" class="@mudaclasse2" style="margin-left: 8px; cursor: pointer"></a></th>
+                        <th>Editar</th>
+                        <th>Deletar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (DataRow a in dt.Rows)
+                    {
+                        <tr id="active">
+                            <td><a title="Ver detalhes" style="cursor: pointer" @onclick="@(() => navegacao.NavigateTo("/detalhes/" + a["artistaId"]))">@a["NomeArtista"]</a></td>
+                            <td>@a["MusicaArtista"]</td>
+                            <td><a title="Editar" style="cursor: pointer" class="btn btn-primary oi oi-pencil" @onclick="@(()=> navegacao.NavigateTo("/editar/" + a["artistaId"]))"></a></td>
+                            <td><a style="cursor: pointer" title="Excluir" @onclick="@(()=>Deletar(@a["artistaId"]))" class="btn btn-danger oi oi-trash"></a></td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+            <div>
+                <button class="btn btn-primary" type="button" @onclick="() => ExcelExport()">Exportar para o Excel</button>
+            </div>
+
+            <Confirmar @ref="@confirma" onCancela="@Cancelar" onConfirma="@DeletarConfirma">
+                <div>Deseja escluir o item ?</div>
+            </Confirmar>
+        </div>
+    }
 }
 else
 {
-    <div class="form-group">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th ><a title="Clique para ordernar por nome" style="cursor: pointer">Nome</a><a @onclick="@(() => Ordenar(1))" class="@mudaclasse" style="margin-left:8px; cursor: pointer"></a></th>                   
-                    <th><a title="Clique para ordenar por música" style="cursor: pointer">Musica</a><a @onclick="@(() => Ordenar(2))" class="@mudaclasse2" style="margin-left: 8px; cursor: pointer"></a></th>
-                    <th>Editar</th>
-                    <th>Deletar</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (DataRow a in dt.Rows)
-                {
-                    <tr id="active">
-                        <td><a title="Ver detalhes" style="cursor: pointer" @onclick="@(() => navegacao.NavigateTo("/detalhes/" + a["artistaId"]))">@a["NomeArtista"]</a></td>
-                        <td>@a["MusicaArtista"]</td>
-                        <td><a title="Editar" style="cursor: pointer" class="btn btn-primary oi oi-pencil" @onclick="@(()=> navegacao.NavigateTo("/editar/" + a["artistaId"]))"></a></td>
-                        <td><a style="cursor: pointer" title="Excluir" @onclick="@(()=>Deletar(@a["artistaId"]))" class="btn btn-danger oi oi-trash"></a></td>
-                    </tr>
-                }
-
-            </tbody>
-        </table>
-        <div>
-            <button class="btn btn-primary" type="button" @onclick="() => ExcelExport()">Exportar para o Excel</button>           
-        </div>
-
-        <Confirmar @ref="@confirma" onCancela="@Cancelar" onConfirma="@DeletarConfirma">
-            <div>Deseja escluir o item ?</div>
-        </Confirmar>
-    </div>
+    <h1>sem acesso....</h1>
 }
 
 @code{
@@ -68,6 +68,7 @@ else
     object idDeleta;
     private string filtro = string.Empty;
     string erro;
+    public List<UserLogin> users;
 
     string mudaclasse = "fa fa-arrow-circle-up";
     string mudaclasse2 = "fa fa-arrow-circle-up";
@@ -75,6 +76,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         dt = await artistaControler.LerDadosDataTable();
+        users = new List<UserLogin>();
     }
     //deletar
     void Deletar(object artistaid)
@@ -101,7 +103,7 @@ else
     //ordernar
     private void Ordenar(int indice)
     {
-        if(indice == 1)
+        if (indice == 1)
         {
             if (mudaclasse == "fa fa-arrow-circle-up")
             {
@@ -116,9 +118,9 @@ else
                 mudaclasse = "fa fa-arrow-circle-up";
             }
         }
-        else if(indice == 2)
+        else if (indice == 2)
         {
-             if(mudaclasse2 == "fa fa-arrow-circle-up")
+            if (mudaclasse2 == "fa fa-arrow-circle-up")
             {
                 dt.DefaultView.Sort = "MusicaArtista ASC";
                 dt = dt.DefaultView.ToTable(true);
@@ -163,5 +165,10 @@ else
     {
         dt = await artistaControler.LerDadosDataTable();
         await excel.ExcelFile(dt);
+    }
+    async Task TesteDt()
+    {
+        DataTable dttest;
+        dttest = await user.RecebeDt();
     }
 }

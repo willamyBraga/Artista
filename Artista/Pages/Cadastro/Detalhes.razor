@@ -3,35 +3,44 @@
 @inject ArtistaControler ArtistaControler
 @inject IJSRuntime js
 @using System.Data
+@inject Usuario user
 
-<div class="container">
-    <div class="form-group" id="print">
-        <div class="card-header"><center><h3>Detalhes do Artista</h3></center></div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Nome artista</th>
-                    <th>Musica</th>
-                    <th>Autor</th>
-                    <th>Data de Criacao</th>
-                    <th>Observações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>@row[0]["NomeArtista"]</td>
-                    <td>@row[0]["MusicaArtista"]</td>
-                    <td>@row[0]["AutorMusica"]</td>
-                    <td>@row[0]["DataCriacao"]</td>
-                    <td>@row[0]["ObservacaoMusica"]</td>
-                </tr>
-            </tbody>
-        </table>
+@if (Usuario.UsuarioPerfil == PerfilUsuario.Administrador)
+{
+    <div class="container">
+        <div class="form-group" id="print">
+            <div class="card-header"><center><h3>Detalhes do Artista</h3></center></div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nome artista</th>
+                        <th>Musica</th>
+                        <th>Autor</th>
+                        <th>Data de Criacao</th>
+                        <th>Observações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@row[0]["NomeArtista"]</td>
+                        <td>@row[0]["MusicaArtista"]</td>
+                        <td>@row[0]["AutorMusica"]</td>
+                        <td>@row[0]["DataCriacao"]</td>
+                        <td>@row[0]["ObservacaoMusica"]</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            <button type="button" class="btn btn-success oi oi-print" onclick="Impressao();"> Imprimir</button>
+        </div>
     </div>
-    <div class="card-footer">
-        <button type="button" class="btn btn-success oi oi-print" onclick="Impressao();"> Imprimir</button>
-    </div>
-</div>
+}
+            else
+            {
+                <h1>Sem acesso</h1>
+            }
+
 
 
 @code {
@@ -39,14 +48,14 @@
     public int artistaid { get; set; }
 
     private DataTable dt = new DataTable();
-   
+
     DataRow[] row;
-    
+
 
     protected override async Task OnInitializedAsync()
     {
         dt = await ArtistaControler.LerDadosDataTable();
 
-        row = dt.Select("artistaId =" + artistaid);        
+        row = dt.Select("artistaId =" + artistaid);
     }
 }

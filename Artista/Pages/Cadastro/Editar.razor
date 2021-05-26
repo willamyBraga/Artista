@@ -2,46 +2,54 @@
 @inject NavigationManager navegacao
 @inject ArtistaControler ArtistaControler
 @using System.Data
+@inject Usuario user
 
-<div class="card">
-    <div class="card-header"><h3>Editar Artista</h3></div>
-    <EditForm Model="@dt" OnValidSubmit="@EditArtista">
-        <ul class="list-group">
-            <li class="list-group-item mb-3">
-                <label>Nome</label>
-                <InputText class="form-control" @bind-Value="@NomeArtista" placeholder="Informe o nome do artista" required maxlength="100" />
-            </li>
-            <li class="list-group-item mb-3">
-                <label>Musica</label>
-                <InputText class="form-control" @bind-Value="@MusicaArtista" placeholder="Informe a Musica do artista " required maxlength="100" />
-            </li>
-            <li class="list-group-item mb-3">
-                <label>Nome do Autor</label>
-                <InputText class="form-control" @bind-Value="@Autor" placeholder="Informe o nome do autor " required maxlength="100" />
-            </li>
-            <li class="list-group-item mb-3">
-                <label>Data de Criacao</label>
-                <InputText class="form-control" onKeyUp="formataData(this)" @bind-Value="@Data" placeholder="dd/MM/yyyy" required maxlength="12" />
-            </li>
-            <li class="list-group-item mb-3">
-                <label>Observação</label>
-                <InputTextArea class="form-control" @bind-Value="@Observacao" placeholder="Observações " required />
-            </li>
-            <li class="list-group-item mb-3">
-                <div class="btn-toolbar" role="toolbar">
-                    <div class="btn-group-sm float-lg-right">
-                        <button type="submit" class="btn btn-primary">Editar</button>
-                        <button type="button" class="btn me-s2 btn-danger" @onclick="@Cancelar">Cancelar</button>
+@if (Usuario.UsuarioPerfil == PerfilUsuario.Administrador)
+{
+    <div class="card">
+        <div class="card-header"><h3>Editar Artista</h3></div>
+        <EditForm Model="@dt" OnValidSubmit="@EditArtista">
+            <ul class="list-group">
+                <li class="list-group-item mb-3">
+                    <label>Nome</label>
+                    <InputText class="form-control" @bind-Value="@NomeArtista" placeholder="Informe o nome do artista" required maxlength="100" />
+                </li>
+                <li class="list-group-item mb-3">
+                    <label>Musica</label>
+                    <InputText class="form-control" @bind-Value="@MusicaArtista" placeholder="Informe a Musica do artista " required maxlength="100" />
+                </li>
+                <li class="list-group-item mb-3">
+                    <label>Nome do Autor</label>
+                    <InputText class="form-control" @bind-Value="@Autor" placeholder="Informe o nome do autor " required maxlength="100" />
+                </li>
+                <li class="list-group-item mb-3">
+                    <label>Data de Criacao</label>
+                    <InputText class="form-control" onKeyUp="formataData(this)" @bind-Value="@Data" placeholder="dd/MM/yyyy" required maxlength="12" />
+                </li>
+                <li class="list-group-item mb-3">
+                    <label>Observação</label>
+                    <InputTextArea class="form-control" @bind-Value="@Observacao" placeholder="Observações " required />
+                </li>
+                <li class="list-group-item mb-3">
+                    <div class="btn-toolbar" role="toolbar">
+                        <div class="btn-group-sm float-lg-right">
+                            <button type="submit" class="btn btn-primary">Editar</button>
+                            <button type="button" class="btn me-s2 btn-danger" @onclick="@Cancelar">Cancelar</button>
+                        </div>
                     </div>
-                </div>
-            </li>
-        </ul>
-    </EditForm>
-</div>
+                </li>
+            </ul>
+        </EditForm>
+    </div>
 
-<div class="alert-danger">
-    <h1>@erro</h1>
-</div>
+    <div class="alert-danger">
+        <h1>@erro</h1>
+    </div>
+}
+else
+{
+    <h1>sem acesso</h1>
+}
 
 @code {
     [Parameter]
@@ -86,11 +94,11 @@
             row[0]["MusicaArtista"] = MusicaArtista;
             row[0]["AutorMusica"] = Autor;
             row[0]["DataCriacao"] = Data;
-            row[0]["ObservacaoMusica"] = Observacao; 
+            row[0]["ObservacaoMusica"] = Observacao;
             //envia a dt com os dados atualizados para fazer o update
             await ArtistaControler.AdicionarDataTable(dt);
             //envia pra home
-            navegacao.NavigateTo("/");
+            navegacao.NavigateTo("/home");
         }
         catch (Exception ex)
         {
@@ -100,7 +108,7 @@
     }
     void Cancelar()
     {
-        navegacao.NavigateTo("/");
+        navegacao.NavigateTo("/home");
     }
 
 }

@@ -1,0 +1,64 @@
+﻿@layout LoginLayout
+@page "/"
+@inject NavigationManager navegacao
+@using Artista.Data.Model
+@inject Usuario usuario
+
+<div class="mx-auto d-flex flex-column" style="width: 400px; height: 700px; margin-top: 30px">
+    <EditForm Model="@formulario" OnValidSubmit="@LoginUsuario">
+        <div>
+            <h3>Usuario Login</h3>
+        </div>
+        <div>
+            <label>usuario </label>
+        </div>
+        <div>
+            <input type="text" @bind="formulario.nomeLogin" required placeholder="insira o seu login" class="form-control"></input>
+        </div>
+        <div>
+            <label>Senha</label>
+        </div>
+        <div>
+            <input required type="password" @bind="formulario.Senha" placeholder="insira a sua senha" class="form-control" />
+        </div>
+        <div style="margin-top: 10px;">
+            <button class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
+        </div>
+    </EditForm>
+    <div class="alert-danger">@result</div>
+</div>
+
+
+@code {
+
+    private string loginusuario;
+    private string senhausuario;
+
+    DadosAutenticado formulario;
+
+    // public List<UserLogin> users = new List<UserLogin>();
+
+    string result;
+
+
+
+    protected override void OnInitialized()
+    {
+        formulario = new DadosAutenticado(usuario); 
+    }
+    async Task LoginUsuario()
+    {
+        var login = await usuario.BuscarLogin(formulario.nomeLogin);
+        if (login == null)
+        {
+            result = "usuario não encontrado";
+            return;
+        }
+        else
+        {
+            result = "usuario encontrado";
+            navegacao.NavigateTo("/home");
+        }
+    }
+
+}

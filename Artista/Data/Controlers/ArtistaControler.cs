@@ -42,7 +42,6 @@ namespace Artista.Data.Controlers
             da.Update(dt);
             conn.Close(); 
             return await Task.FromResult(dt);
-        }
-             
+        }            
     }
 }

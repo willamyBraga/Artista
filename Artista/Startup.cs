@@ -34,6 +34,7 @@ namespace Artista
             services.AddRazorPages();
             services.AddScoped<ArtistaControler>();
             services.AddScoped<Excel>();
+            services.AddScoped<Usuario>(); 
 
             services.AddServerSideBlazor();
             services.AddSingleton(conexao);
