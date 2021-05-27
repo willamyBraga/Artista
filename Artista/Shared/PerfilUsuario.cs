@@ -8,5 +8,6 @@ namespace Artista.Shared
     public class PerfilUsuario
     {
         public const string Administrador = "admin"; 
+      //public const string Nivel2
     }
 }

@@ -18,7 +18,6 @@ namespace Artista.Shared.Excel
 
         public  async Task ExcelFile(DataTable dtfront)
         {
-            //caminho do arquivo
             XLWorkbook wb = new XLWorkbook();
             var ws = wb.Worksheets.Add("artista");
             ws.Cell(1, 1).Value = "Nome Artista";
