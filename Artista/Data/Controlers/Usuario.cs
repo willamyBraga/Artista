@@ -27,7 +27,20 @@ namespace Artista.Data.Controlers
             UsuarioPerfil = string.Empty; 
             Senha = string.Empty;
         }
-       
+        public async Task<DataTable> lerDadosdatatable()
+        {
+            DataTable dt = new DataTable();
+            NpgsqlConnection conn = new NpgsqlConnection(_conexao.conexao);
+            conn.Open();
+            NpgsqlDataAdapter da = new NpgsqlDataAdapter("SELECT *FROM tbl_usuario ", conn);
+            //criar os comandos  automatico 
+            NpgsqlCommandBuilder cmbuilder = new NpgsqlCommandBuilder(da);
+            da.Fill(dt);
+            da.Update(dt);
+            conn.Close();
+            return await Task.FromResult(dt);
+        }
+
         public async Task<DataTable> AdicionarDataTable(DataTable dt)
         {
             NpgsqlConnection conn = new NpgsqlConnection(_conexao.conexao);
@@ -49,26 +62,10 @@ namespace Artista.Data.Controlers
             conn.Open();
             NpgsqlDataAdapter da = new NpgsqlDataAdapter(sql, conn);
             da.Fill(dt);
-
-           // string expressoes = "Perfil = 'admin'"; 
            //controle de nivel de usuario
             DataRow[] row = dt.Select("Perfil = 'admin'");
             UsuarioPerfil = row[0]["Perfil"].ToString();
-
-            return await Task.FromResult(dt);
-        }
-        public async Task<DataTable> lerDadosdatatable()
-        {
-            DataTable dt = new DataTable();
-
-            NpgsqlConnection conn = new NpgsqlConnection(_conexao.conexao);
-            conn.Open();
-            NpgsqlDataAdapter da = new NpgsqlDataAdapter("SELECT *FROM tbl_usuario ", conn);
-            //criar os comandos  automatico 
-            NpgsqlCommandBuilder cmbuilder = new NpgsqlCommandBuilder(da);
-            da.Fill(dt);
-            da.Update(dt);
-            conn.Close();
+            
             return await Task.FromResult(dt);
         }
     }
