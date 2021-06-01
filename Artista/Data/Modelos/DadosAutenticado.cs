@@ -8,15 +8,15 @@ namespace Artista.Data.Controlers
 {
     public class DadosAutenticado
     {
-        private readonly Usuario usuarios;
+        private readonly MeUsuarios usuarios;
         private readonly UserLogin tbUsuarios; 
 
-        public DadosAutenticado(Usuario usuario)
+        public DadosAutenticado(MeUsuarios usuario)
         {
             tbUsuarios = new UserLogin();
             usuarios = usuario; 
         }
-        public DadosAutenticado(UserLogin novousuario, Usuario metodo)
+        public DadosAutenticado(UserLogin novousuario, MeUsuarios metodo)
         {
             tbUsuarios = novousuario;
             ConfirmaSenha = novousuario.Senha;

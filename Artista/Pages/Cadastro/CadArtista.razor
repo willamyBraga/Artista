@@ -1,10 +1,10 @@
 ﻿@page "/cadastroartista"
 @inject NavigationManager navegacao
-@inject ArtistaControler artista
+@inject MeArtistas artista
 @using System.Data
-@inject Usuario user
+@inject MeUsuarios user
 
-@if (Usuario.UsuarioPerfil == PerfilUsuario.Administrador)
+@if (MeUsuarios.UsuarioPerfil == PerfilUsuario.Administrador)
 {
     <div class="card">
         <div class="card-header"><h3>Cadastro de Artista</h3></div>

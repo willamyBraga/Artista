@@ -6,11 +6,11 @@ using Artista.Data.Model;
 
 namespace Artista.Data.Controlers
 {
-    public class Usuario
+    public class MeUsuarios
     {
         private readonly StringConexao _conexao;
 
-        public Usuario(StringConexao conexao)
+        public MeUsuarios(StringConexao conexao)
         {
             _conexao = conexao;
         }

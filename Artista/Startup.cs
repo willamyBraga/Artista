@@ -32,9 +32,9 @@ namespace Artista
             var conexao = new StringConexao(Configuration.GetConnectionString("Conexao"));
 
             services.AddRazorPages();
-            services.AddScoped<ArtistaControler>();
+            services.AddScoped<MeArtistas>();
             services.AddScoped<Excel>();
-            services.AddScoped<Usuario>(); 
+            services.AddScoped<MeUsuarios>(); 
 
             services.AddServerSideBlazor();
             services.AddSingleton(conexao);

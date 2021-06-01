@@ -1,11 +1,11 @@
 ﻿@page "/detalhes/{artistaid:int}"
 @inject NavigationManager navegacao
-@inject ArtistaControler ArtistaControler
+@inject MeArtistas ArtistaControler
 @inject IJSRuntime js
 @using System.Data
-@inject Usuario user
+@inject MeUsuarios user
 
-@if (Usuario.UsuarioPerfil == PerfilUsuario.Administrador)
+@if (MeUsuarios.UsuarioPerfil == PerfilUsuario.Administrador)
 {
     <div class="container">
         <div class="form-group" id="print">

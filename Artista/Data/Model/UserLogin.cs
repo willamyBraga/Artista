@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Artista.Data.Model
 {
     public class UserLogin
-    {
+    { 
         public UserLogin() { }
 
         public UserLogin(DadosAutenticado dados)

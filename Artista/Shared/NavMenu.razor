@@ -1,4 +1,4 @@
-﻿@inject Usuario user
+﻿@inject MeUsuarios user
 
 <div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">Artista</a>
@@ -15,7 +15,7 @@
             </NavLink>
         </li>
         <li class="nav-item px-3">
-            <NavLink class="nav-link" href="/" @onclick="@(() => Usuario.Logout())">
+            <NavLink class="nav-link" href="/" @onclick="@(() => MeUsuarios.Logout())">
                 <span class="oi oi-account-logout" aria-hidden="true"></span> Sair
             </NavLink>
         </li>

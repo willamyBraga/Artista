@@ -1,11 +1,11 @@
 ﻿@page "/home"
 @inject NavigationManager navegacao
 @inject Excel excel
-@inject ArtistaControler artistaControler
+@inject MeArtistas artistaControler
 @inject IJSRuntime js
-@inject Usuario user
+@inject MeUsuarios user
 
-@if (Usuario.UsuarioPerfil == PerfilUsuario.Administrador)
+@if (MeUsuarios.UsuarioPerfil == PerfilUsuario.Administrador)
 {
     <div style="padding: 10px 10px 10px;">
         <h4>Cadastro de artista</h4>

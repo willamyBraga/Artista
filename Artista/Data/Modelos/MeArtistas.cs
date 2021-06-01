@@ -9,11 +9,11 @@ using Npgsql;
 
 namespace Artista.Data.Controlers
 {
-    public class ArtistaControler
+    public class MeArtistas
     {
         private readonly StringConexao _conexao;
 
-        public ArtistaControler(StringConexao conexao)
+        public MeArtistas(StringConexao conexao)
         {
             _conexao = conexao;
         }
