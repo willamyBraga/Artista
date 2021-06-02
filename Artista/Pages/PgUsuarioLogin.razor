@@ -27,7 +27,8 @@
     <div class="alert-danger">@result</div>
 </div>
 
-@code {
+@code
+ {
 
     private string loginusuario;
     private string senhausuario;
@@ -47,13 +48,12 @@
 
         if(dt.Rows.Count > 0)
         {
-            result = "usuario encontrado";
-            navegacao.NavigateTo("/home"); 
+            //result = "usuario encontrado";
+            navegacao.NavigateTo("/home");
         }
         else
         {
-            result = "erro na senha ou login"; 
+            result = "erro na senha ou login";
         }
     }
-
 }
