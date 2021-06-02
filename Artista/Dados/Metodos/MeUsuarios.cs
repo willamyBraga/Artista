@@ -14,9 +14,9 @@ namespace Artista.Data.Controlers
         }
 
         public static string LoginNome { get; set; }
-        public static string Senha { get; private set; }
-        public static string UsuarioPerfil { get; private set; }
-        public static bool UserLogado { get; private set; }
+        public static string Senha { get; private set; } 
+        public static string UsuarioPerfil { get; private set; } 
+        public static bool UserLogado { get; private set; } 
 
         public static void Logout()
         {
