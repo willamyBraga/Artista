@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Npgsql;
 using System.Data;
-using Artista.Data.Model;
 
 namespace Artista.Data.Controlers
 {

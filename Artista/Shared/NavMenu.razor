@@ -15,6 +15,11 @@
             </NavLink>
         </li>
         <li class="nav-item px-3">
+            <NavLink class="nav-link" href="/cadusuarios" Match="NavLinkMatch.All">
+                <span class="oi oi-person" aria-hidden="true"></span> Usuarios
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
             <NavLink class="nav-link" href="/" @onclick="@(() => MeUsuarios.Logout())">
                 <span class="oi oi-account-logout" aria-hidden="true"></span> Sair
             </NavLink>
