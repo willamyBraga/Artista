@@ -12,20 +12,18 @@
         <hr class="my-4">
     </div>
     <EditForm Model="@dt" OnValidSubmit="@LoginUsuario">
-        <div>
-            <label>usuario </label>
-        </div>
-        <div>
-            <input type="text" @bind="@loginusuario" required placeholder="insira o seu login" class="form-control" />
-        </div>
-        <div>
-            <label>Senha</label>
-        </div>
-        <div>
-            <input required type="password" @bind="@senhausuario" placeholder="insira a sua senha" class="form-control" />
-        </div>
-        <div style="margin-top: 10px;">
-            <button class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
+        <div style="display:grid">
+            <div>
+                <input type="text" @bind="@loginusuario" required placeholder="insira o seu usuario" class="form-control" />
+            </div>
+            <br />
+            <div>
+                <input required type="password" @bind="@senhausuario" placeholder="insira a sua senha" class="form-control" />
+            </div>
+            <br />
+            <div style="margin-top: 10px;">
+                <button class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
+            </div>
         </div>
     </EditForm>
     <div class="alert-danger">@result</div>
@@ -50,7 +48,7 @@
     {
         dt = await usuario.dtLogin(loginusuario);
 
-        if(dt.Rows.Count > 0)
+        if (dt.Rows.Count > 0)
         {
             //result = "usuario encontrado";
             navegacao.NavigateTo("/home");
