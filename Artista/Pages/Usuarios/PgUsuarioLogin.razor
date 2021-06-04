@@ -4,15 +4,19 @@
 @inject MeUsuarios usuario
 
 <div class="mx-auto d-flex flex-column" style="width: 400px; height: 700px; margin-top: 30px">
+    <div>
+        <img src="/Img/Logo-Christus-Colorida2.png" class="img-fluid" />
+        <h5 class="card-title text-center" style="color:midnightblue">
+            <b>Cadastro de Artistas</b>
+        </h5>
+        <hr class="my-4">
+    </div>
     <EditForm Model="@dt" OnValidSubmit="@LoginUsuario">
-        <div>
-            <h3>Usuario Login</h3>
-        </div>
         <div>
             <label>usuario </label>
         </div>
         <div>
-            <input type="text" @bind="@loginusuario" required placeholder="insira o seu login" class="form-control" />  
+            <input type="text" @bind="@loginusuario" required placeholder="insira o seu login" class="form-control" />
         </div>
         <div>
             <label>Senha</label>
