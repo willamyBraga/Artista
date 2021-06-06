@@ -4,7 +4,7 @@
 @using System.Data
 @inject MeUsuarios user
 
-@if (MeUsuarios.UsuarioPerfil == PerfilUsuario.Administrador)
+@if (MeUsuarios.UsuarioPerfil == PerfilUsuario.Administrador || MeUsuarios.UsuarioPerfil == PerfilUsuario.Moderador)
 {
     <div class="card">
         <div class="card-header"><h3>Cadastro de Artista</h3></div>

@@ -5,7 +5,7 @@
 @using System.Data
 @inject MeUsuarios user
 
-@if (MeUsuarios.UsuarioPerfil == PerfilUsuario.Administrador)
+@if (MeUsuarios.UsuarioPerfil == PerfilUsuario.Administrador || MeUsuarios.UsuarioPerfil == PerfilUsuario.Moderador)
 {
     <div class="container">
         <div class="form-group" id="print">
@@ -54,6 +54,6 @@ else
     {
         dt = await ArtistaControler.LerDadosDataTable();
 
-        row = dt.Select("artistaId =" + artistaid); 
+        row = dt.Select("artistaId =" + artistaid);
     }
 }

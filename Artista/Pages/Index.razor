@@ -5,7 +5,7 @@
 @inject IJSRuntime js
 @inject MeUsuarios user
 
-@if (MeUsuarios.UsuarioPerfil == PerfilUsuario.Administrador)
+@if (MeUsuarios.UsuarioPerfil == PerfilUsuario.Administrador || MeUsuarios.UsuarioPerfil == PerfilUsuario.Moderador)
 {
     <div style="padding: 10px 10px 10px;">
         <h4>Cadastro de artista</h4>
@@ -166,5 +166,5 @@ else
         dt = await artistaControler.LerDadosDataTable();
         await excel.ExcelFile(dt);
     }
-   
+
 }

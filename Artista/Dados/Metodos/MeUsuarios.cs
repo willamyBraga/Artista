@@ -61,7 +61,7 @@ namespace Artista.Data.Controlers
             NpgsqlDataAdapter da = new NpgsqlDataAdapter(sql, conn);
             da.Fill(dt);
            //controle de nivel de usuario
-            DataRow[] row = dt.Select("Perfil = 'admin'");
+            DataRow[] row = dt.Select("Perfil = 'admin' OR Perfil = 'moderador'");
             UsuarioPerfil = row[0]["Perfil"].ToString();
             Senha = row[0]["Senha"].ToString(); 
             
