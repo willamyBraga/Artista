@@ -46,21 +46,30 @@
     }
     async Task LoginUsuario()
     {
-        dt = await usuario.dtLogin(loginusuario);
-       //senhausuario = Criptografia.DecodificarCriptografia(senhausuario);
+        senhausuario = Criptografia.Encriptografar(senhausuario);
+        try
+        {
+            dt = await usuario.dtLogin(senhausuario);
+            if (dt.Rows.Count > 0)
+            {
+                //result = "usuario encontrado";           
+                navegacao.NavigateTo("/home");
+
+            }
+            else
+            {
+                result = "nenhum usuario encontrado...";
+
+            }
+
+        }
+        catch (Exception ex)
+        {
+            result = "Usuario não encontrado " + ex.Message;
+           // navegacao.NavigateTo("/");
+        }
+        //senhausuario = Criptografia.DecodificarCriptografia(senhausuario);
         //DataRow[] row = dt.Select("senha ==" + senhausuario);
-
-        if (dt.Rows.Count > 0)
-        {
-            //result = "usuario encontrado";           
-            navegacao.NavigateTo("/home");
-
-        }
-        else
-        {
-            result = "nenhum usuario encontrado...";
-
-        }
 
     }
 }

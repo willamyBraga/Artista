@@ -55,7 +55,7 @@ namespace Artista.Data.Controlers
         public async Task<DataTable> dtLogin(string login)
         {
             DataTable dt = new DataTable(); 
-            string sql = $"SELECT * FROM tbl_usuario WHERE loginUsuario = '{login}'";
+            string sql = $"SELECT * FROM tbl_usuario WHERE Senha = '{login}'";
             NpgsqlConnection conn = new NpgsqlConnection(_conexao.conexao);
             conn.Open();
             NpgsqlDataAdapter da = new NpgsqlDataAdapter(sql, conn);
