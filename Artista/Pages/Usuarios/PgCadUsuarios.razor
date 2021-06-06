@@ -1,15 +1,79 @@
 ﻿@page "/cadusuarios"
-
-<h3>Cadastro de Usuarios</h3>
-@*cadastro é parecido com os outros antes ve como criptografa *@
-
+@inject MeUsuarios usuarios
+@inject NavigationManager navegacao
 
 
+@if (MeUsuarios.UsuarioPerfil == PerfilUsuario.Administrador)
+{
+    <div class="card">
+        <h3 class="card-header">Cadastro de usuarios</h3>
+        <br />
+        <EditForm Model="@dt" OnValidSubmit="@NovoUsuario">
+            <div style="display:grid">
+                <div>
+                    <input type="text" @bind="@nomeUsuario" required placeholder="insira o seu nome" class="form-control" />
+                </div>
+                <br />
+                <div>
+                    <input type="text" @bind="@email" required placeholder="insira o seu email" class="form-control" />
+                </div>
+                <br />
+                <div>
+                    <input type="text" @bind="@loginusuario" required placeholder="insira o seu usuario" class="form-control" />
+                </div>
+                <br />
+                <div>
+                    <input required type="password" @bind="@senhausuario" placeholder="insira a sua senha" class="form-control" />
+                </div>
+                <br />
+                <div class="form-control">
+                    <InputSelect @bind-Value="@perfilusuario" class="form-control">
+                        <option>@PerfilUsuario.Administrador</option>
+                        <option>@PerfilUsuario.Moderador</option>
+                    </InputSelect>
+                </div>
+                <br />
+                <div style="margin-top: 10px;">
+                    <button class="btn btn-primary btn-lg btn-block" type="submit">Cadastrar</button>
+                </div>
+            </div>
+        </EditForm>
+        <div class="alert-danger">@result</div>
+    </div>
+}
+else
+{
+    <h1>Nivel de acesso insuficiente</h1>
+}
 
 @code {
-    
-    protected override Task OnInitializedAsync()
+    DataTable dt;
+    private string loginusuario; //3
+    private string perfilusuario;
+    private string senhausuario; //4
+    private string nomeUsuario; //1
+    private string email; //2
+
+    string result;
+
+    protected override async Task OnInitializedAsync()
     {
-        return base.OnInitializedAsync();
+        dt = await usuarios.lerDadosdatatable();
+    }
+    private async Task NovoUsuario()
+    {
+        try
+        {
+            var senha = Criptografia.Encriptografar(senhausuario);
+
+            dt = await usuarios.lerDadosdatatable();
+            dt.Rows.Add(null, nomeUsuario, email, loginusuario, senha, perfilusuario);
+            await usuarios.AdicionarDataTable(dt);
+            result = "cadastrado com sucesso....";
+        }
+        catch (Exception ex)
+        {
+            result = "erro " + ex.Message;
+        }
     }
 }

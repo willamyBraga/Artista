@@ -63,6 +63,7 @@ namespace Artista.Data.Controlers
            //controle de nivel de usuario
             DataRow[] row = dt.Select("Perfil = 'admin'");
             UsuarioPerfil = row[0]["Perfil"].ToString();
+            Senha = row[0]["Senha"].ToString(); 
             
             return await Task.FromResult(dt);
         }

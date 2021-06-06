@@ -1,0 +1,46 @@
+﻿@typeparam Type
+
+@if (ListaDeValores != null)
+{
+    <div class="dropdown">
+        <button class="btn custom-dropdown dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            @Titulo
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            @foreach (var valor in ListaDeValores)
+            {
+                if (valor.Equals(Valor))
+                {
+                    <li>
+                        <a class="dropdown-item active" @onclick="@(_ => SelecionaNovoValor(valor))">
+                            @valor.ToString()
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        <a class="dropdown-item" @onclick="@(_ => SelecionaNovoValor(valor))">
+                            @valor.ToString()
+                        </a>
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+}
+
+@code {
+    [Parameter] public Type Valor { get; set; }
+    [Parameter] public string Frase { get; set; }
+    [Parameter] public List<Type> ListaDeValores { get; set; }
+    [Parameter] public EventCallback<Type> ValorChanged { get; set; }
+
+    private string Titulo => string.IsNullOrEmpty(Valor?.ToString()) ? Frase : Valor?.ToString();
+
+    private Task SelecionaNovoValor(Type novoValor)
+    {
+        Valor = novoValor;
+        return ValorChanged.InvokeAsync(Valor);
+    }
+}

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using Artista.Data;
 using Artista.Data.Controlers;
 using Artista.Shared.Excel;
-
+using Artista.Shared.Utilitarios; 
 namespace Artista
 {
     public class Startup
@@ -34,7 +34,7 @@ namespace Artista
             services.AddRazorPages();
             services.AddScoped<MeArtistas>();
             services.AddScoped<Excel>();
-            services.AddScoped<MeUsuarios>(); 
+            services.AddScoped<MeUsuarios>();
 
             services.AddServerSideBlazor();
             services.AddSingleton(conexao);

@@ -7,7 +7,12 @@ namespace Artista.Shared
 {
     public class PerfilUsuario
     {
-        public const string Administrador = "admin"; 
-      //public const string Nivel2
+        public const string Administrador = "admin";
+        public const string Moderador = "moderador";
+
+        public static List<string> ListaDePerfis => new List<string>()
+        {
+            Administrador, Moderador
+        };
     }
 }
