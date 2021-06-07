@@ -1,0 +1,58 @@
+﻿@page "/pgusuario"
+@inject MeUsuarios user
+@inject NavigationManager navegacao
+
+@if (MeUsuarios.UsuarioPerfil == PerfilUsuario.Administrador || MeUsuarios.UsuarioPerfil == PerfilUsuario.Moderador)
+{
+    @if (dt == null)
+    {
+        <h1>Carregando...</h1>
+    }
+    else if (dt.Rows.Count == 0)
+    {
+        <h1>Não existem cadastros...</h1>
+    }
+    else
+    {
+        <div style="padding: 10px 10px 10px;">
+            <h4>Lista de Usuarios</h4>
+            <button class="btn btn-primary" @onclick="@(() => navegacao.NavigateTo("/cadusuarios"))">Incluir novo Registro</button>
+        </div>
+        <div class="form-group">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Login</th>
+                        <th>Perfil</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (DataRow item in dt.Rows)
+                    {
+                        <tr id="active">
+                            <td>@item["NomeUsuario"]</td>
+                            <td>@item["EmailUsuario"]</td>
+                            <td>@item["LoginUsuario"]</td>
+                            <td>@item["Perfil"]</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+}
+else
+{
+    <h1>Nivel de acesso insuficiente...</h1>
+}
+
+@code {
+    DataTable dt = new DataTable();
+
+    protected override async Task OnInitializedAsync()
+    {
+        dt = await user.lerDadosdatatable();
+    }
+}
