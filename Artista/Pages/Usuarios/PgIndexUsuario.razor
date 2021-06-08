@@ -31,12 +31,12 @@
                 <tbody>
                     @foreach (DataRow item in dt.Rows)
                     {
-                    <tr id="active">
-                        <td><a style="cursor: pointer" @onclick="@(()=> navegacao.NavigateTo("/detalhesusuario/" + item["UsuarioId"]))">@item["NomeUsuario"]</a></td>
-                        <td>@item["EmailUsuario"]</td>
-                        <td><a style="cursor: pointer" title="Editar" class="btn btn-danger oi oi-pencil"></a></td>
-                        <td><a style="cursor: pointer" title="Excluir" class="btn btn-danger oi oi-trash"></a></td>
-                    </tr>
+                        <tr id="active">
+                            <td><a style="cursor: pointer" @onclick="@(()=> navegacao.NavigateTo("/detalhesusuario/" + item["UsuarioId"]))">@item["NomeUsuario"]</a></td>
+                            <td>@item["EmailUsuario"]</td>
+                            <td><a style="cursor: pointer" title="Editar" class="btn btn-primary oi oi-pencil"></a></td>
+                            <td><a style="cursor: pointer" title="Excluir" class="btn btn-danger oi oi-trash"></a></td>
+                        </tr>
                     }
                 </tbody>
             </table>
