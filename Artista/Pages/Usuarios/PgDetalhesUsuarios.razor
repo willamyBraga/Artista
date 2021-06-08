@@ -1,0 +1,48 @@
+﻿@page "/detalhesusuario/{usuarioid:int}"
+@inject NavigationManager navegacao
+@inject MeUsuarios user
+
+@if (MeUsuarios.UsuarioPerfil == PerfilUsuario.Administrador || MeUsuarios.UsuarioPerfil == PerfilUsuario.Moderador)
+{
+    <div class="container">
+        <div class="form-group" id="print">
+            <div class="card-header"><center><h3>Usuarios Cadastrados</h3></center></div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Login usuario</th>
+                        <th>Perfil</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@row[0]["NomeUsuario"]</td>
+                        <td>@row[0]["EmailUsuario"]</td>
+                        <td>@row[0]["LoginUsuario"]</td>
+                        <td>@row[0]["Perfil"]</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <h1>Sem acesso</h1>
+}
+@code {
+    [Parameter]
+    public int usuarioid { get; set; }
+
+    private DataTable dt = new DataTable();
+
+    DataRow[] row;
+
+    protected override async Task OnInitializedAsync()
+    {
+        dt = await user.lerDadosdatatable();
+        row = dt.Select("usuarioId =" + usuarioid); 
+    }
+}
