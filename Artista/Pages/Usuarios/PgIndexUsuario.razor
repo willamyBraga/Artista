@@ -35,11 +35,14 @@
                             <td><a style="cursor: pointer" @onclick="@(()=> navegacao.NavigateTo("/detalhesusuario/" + item["UsuarioId"]))">@item["NomeUsuario"]</a></td>
                             <td>@item["EmailUsuario"]</td>
                             <td><a style="cursor: pointer" title="Editar" class="btn btn-primary oi oi-pencil"></a></td>
-                            <td><a style="cursor: pointer" title="Excluir" class="btn btn-danger oi oi-trash"></a></td>
+                            <td><a style="cursor: pointer" @onclick="@(() => Deletar(item["UsuarioId"]))" title="Excluir" class="btn btn-danger oi oi-trash"></a></td>
                         </tr>
                     }
                 </tbody>
             </table>
+            <Confirmar @ref="@confirma" onCancela="@Cancelar" onConfirma="@DeletarConfirma">
+                <div>Deseja escluir o item ?</div>
+            </Confirmar>
         </div>
     }
 }
@@ -50,9 +53,34 @@ else
 
 @code {
     DataTable dt = new DataTable();
+    Confirmar confirma;
+    object idDeleta;
 
     protected override async Task OnInitializedAsync()
     {
         dt = await user.lerDadosdatatable();
+    }
+
+    void Deletar(object artistaid)
+    {
+        confirma.Exibir();
+        idDeleta = artistaid;
+    }
+    async Task DeletarConfirma()
+    {
+        DataRow[] row = dt.Select("UsuarioId =" + idDeleta);
+        if (row.Length > 0)
+        {
+            row[0].Delete();
+            await user.AdicionarDataTable(dt);
+            confirma.Ocultar();
+            dt = await user.lerDadosdatatable(); 
+
+        }
+    }
+
+    void Cancelar()
+    {
+        confirma.Ocultar();
     }
 }
