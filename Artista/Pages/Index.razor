@@ -4,6 +4,8 @@
 @inject MeArtistas artistaControler
 @inject IJSRuntime js
 @inject MeUsuarios user
+@using System.IO
+
 
 @if (MeUsuarios.UsuarioPerfil == PerfilUsuario.Administrador || MeUsuarios.UsuarioPerfil == PerfilUsuario.Moderador)
 {
@@ -24,35 +26,38 @@
     }
     else
     {
-        <div class="form-group">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th><a title="Clique para ordernar por nome" style="cursor: pointer">Nome</a><a @onclick="@(() => Ordenar(1))" class="@mudaclasse" style="margin-left:8px; cursor: pointer"></a></th>
-                        <th><a title="Clique para ordenar por música" style="cursor: pointer">Musica</a><a @onclick="@(() => Ordenar(2))" class="@mudaclasse2" style="margin-left: 8px; cursor: pointer"></a></th>
-                        <th>Editar</th>
-                        <th>Deletar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (DataRow a in dt.Rows)
-                    {
-                        <tr id="active">
-                            <td><a title="Ver detalhes" style="cursor: pointer" @onclick="@(() => navegacao.NavigateTo("/detalhes/" + a["artistaId"]))">@a["NomeArtista"]</a></td>
-                            <td>@a["MusicaArtista"]</td>
-                            <td><a title="Editar" style="cursor: pointer" class="btn btn-primary oi oi-pencil" @onclick="@(()=> navegacao.NavigateTo("/editar/" + a["artistaId"]))"></a></td>
-                            <td><a style="cursor: pointer" title="Excluir" @onclick="@(()=>Deletar(@a["artistaId"]))" class="btn btn-danger oi oi-trash"></a></td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-            <div>
-                <button class="btn btn-primary" type="button" @onclick="() => ExcelExport()">Exportar para o Excel</button>
-            </div>
-            <Confirmar @ref="@confirma" onCancela="@Cancelar" onConfirma="@DeletarConfirma">
-                <div>Deseja escluir o item ?</div>
-            </Confirmar>
-        </div>
+<div class="form-group">
+    <table class="table">
+        <thead>
+            <tr>
+                <th><a title="Clique para ordernar por nome" style="cursor: pointer">Nome</a><a @onclick="@(() => Ordenar(1))" class="@mudaclasse" style="margin-left:8px; cursor: pointer"></a></th>
+                <th><a title="Clique para ordenar por música" style="cursor: pointer">Musica</a><a @onclick="@(() => Ordenar(2))" class="@mudaclasse2" style="margin-left: 8px; cursor: pointer"></a></th>
+                <th>Editar</th>
+                <th>Deletar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DataRow a in dt.Rows)
+            {
+                <tr id="active">
+                    <td><a title="Ver detalhes" style="cursor: pointer" @onclick="@(() => navegacao.NavigateTo("/detalhes/" + a["artistaId"]))">@a["NomeArtista"]</a></td>
+                    <td>@a["MusicaArtista"]</td>
+                    <td><a title="Editar" style="cursor: pointer" class="btn btn-primary oi oi-pencil" @onclick="@(()=> navegacao.NavigateTo("/editar/" + a["artistaId"]))"></a></td>
+                    <td><a style="cursor: pointer" title="Excluir" @onclick="@(()=>Deletar(@a["artistaId"]))" class="btn btn-danger oi oi-trash"></a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div>
+        <button class="btn btn-primary" type="button" @onclick="() => ExcelExport()">Exportar para o Excel</button>
+    </div>
+    <div>
+        <button class="btn btn-primary" type="button" @onclick="() => Cvs()">Exportar para o Excel</button>
+    </div>
+    <Confirmar @ref="@confirma" onCancela="@Cancelar" onConfirma="@DeletarConfirma">
+        <div>Deseja escluir o item ?</div>
+    </Confirmar>
+</div>
     }
 }
 else
@@ -67,6 +72,7 @@ else
     private string filtro = string.Empty;
     string erro;
     public List<UserLogin> users;
+    public List<ArtistaModel> artistas;
 
     string mudaclasse = "fa fa-arrow-circle-up";
     string mudaclasse2 = "fa fa-arrow-circle-up";
@@ -137,7 +143,6 @@ else
     //pesquisar
     public void Pesquisar()
     {
-        //verificar como retorna os dados sem informar o registro tal como esta no banco de dados
 
         try
         {
@@ -163,6 +168,36 @@ else
     {
         dt = await artistaControler.LerDadosDataTable();
         await excel.ExcelFile(dt);
+    }
+    public async Task Cvs()
+    {
+        dt = await artistaControler.LerDadosDataTable();
+        List<ArtistaModel> listArtistas = new List<ArtistaModel>();
+        DataRow[] rows = dt.Select(); 
+        foreach (DataRow item in dt.Rows)
+        {
+            ArtistaModel registro = new ArtistaModel
+            {
+                ArtistaNome = item["NomeArtista"].ToString(),
+                MusicaArtista = item["MusicaArtista"].ToString()
+
+            };
+            listArtistas.Add(registro);
+        }
+        using (var memory = new MemoryStream())
+        {
+            using (var writer = new StreamWriter(memory))
+            {
+                using (var csv = new CsvHelper.CsvWriter(writer, CultureInfo.InvariantCulture))
+                {
+                    csv.WriteRecords(rows);
+
+                }
+
+                var arr = memory.ToArray();
+                js.SaveAs("artistas.csv", arr);
+            }
+        }
     }
 
 }
