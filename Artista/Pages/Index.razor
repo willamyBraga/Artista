@@ -51,8 +51,9 @@
     <div>
         <button class="btn btn-primary" type="button" @onclick="() => ExcelExport()">Exportar para o Excel</button>
     </div>
+    <br />
     <div>
-        <button class="btn btn-primary" type="button" @onclick="() => Cvs()">Exportar para o Excel</button>
+        <button class="btn btn-primary" type="button" @onclick="() => Cvs()">Exportar para o Csv</button>
     </div>
     <Confirmar @ref="@confirma" onCancela="@Cancelar" onConfirma="@DeletarConfirma">
         <div>Deseja escluir o item ?</div>
@@ -190,7 +191,7 @@ else
             {
                 using (var csv = new CsvHelper.CsvWriter(writer, CultureInfo.InvariantCulture))
                 {
-                    csv.WriteRecords(rows);
+                    csv.WriteRecords(listArtistas);
 
                 }
 
