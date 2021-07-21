@@ -38,6 +38,8 @@ namespace Artista
 
             services.AddServerSideBlazor();
             services.AddSingleton(conexao);
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +60,8 @@ namespace Artista
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseRequestLocalization("pt-BR");
 
             app.UseEndpoints(endpoints =>
             {
