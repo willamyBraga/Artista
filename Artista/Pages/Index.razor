@@ -184,7 +184,8 @@ else
             {
                 ArtistaId = Convert.ToInt32(item["artistaId"].ToString()),
                 ArtistaNome = item["NomeArtista"].ToString(),
-                MusicaArtista = item["MusicaArtista"].ToString()
+                MusicaArtista = item["MusicaArtista"].ToString(),
+                data = DateTime.Today.ToString("dd/MM/yyyy"), 
 
             };
             listArtistas.Add(registro);
